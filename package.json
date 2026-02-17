@@ -1,0 +1,29 @@
+{
+  "name": "melissas-blog",
+  "packageManager": "bun@1.3.9",
+  "description": "Minimal Astro site with Sanity Studio",
+  "scripts": {
+    "dev": "bun run --workspaces dev",
+    "build": "bun run --workspaces build"
+  },
+  "keywords": [
+    "Sanity",
+    "Astro",
+    "Headless CMS",
+    "Visual Editing",
+    "Live Content API (LCAPI)",
+    "Real-time"
+  ],
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-template-astro-clean/issues"
+  },
+  "homepage": "https://github.com/sanity-io/sanity-template-astro-clean#readme",
+  "workspaces": [
+    "studio",
+    "app"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "type": "module"
+}
