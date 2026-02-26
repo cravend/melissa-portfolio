@@ -1,14 +1,82 @@
 ---
-import Card from "../components/Card.astro";
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
-import { getPosts } from "../utils/sanity";
+import { urlFor } from "../utils/image";
+import { getSiteSettings } from "../utils/sanity";
 
-const posts = await getPosts();
+const siteSettings = await getSiteSettings();
+const siteTitle = siteSettings?.siteTitle || "Melissa Craven";
+const bio =
+  siteSettings?.bio ||
+  "Melissa Craven shares travel writing, Fulbright teaching resources, stories for kids, and updates about her author work.";
+const headshot = siteSettings?.headshot;
 ---
 
-<Layout title="Welcome to Astro.">
-  <section>
-    {posts.length ? posts.map((post) => <Card post={post} />) : <Welcome />}
+<Layout title={siteTitle}>
+  <h1>{siteTitle}</h1>
+
+  <section aria-labelledby="bio-heading">
+    <h2 id="bio-heading">Bio</h2>
+    {
+      headshot ? (
+        <figure>
+          <img
+            src={urlFor(headshot).width(720).url()}
+            alt={headshot.alt || `${siteTitle} headshot`}
+          />
+          <figcaption>{siteTitle}</figcaption>
+        </figure>
+      ) : null
+    }
+    <p>{bio}</p>
+  </section>
+
+  <section aria-labelledby="sections-heading">
+    <h2 id="sections-heading">Section Previews</h2>
+
+    <section aria-labelledby="travel-preview-heading">
+      <h3 id="travel-preview-heading">Travel</h3>
+      <p>Stories, reflections, and updates from Melissa's travels.</p>
+      <p><a href="/travel">Visit Travel</a></p>
+    </section>
+
+    <section aria-labelledby="fulbright-preview-heading">
+      <h3 id="fulbright-preview-heading">Fulbright</h3>
+      <p>
+        Updates from Fulbright work, plus resources and ESOL teaching tools.
+      </p>
+      <nav aria-label="Fulbright preview links">
+        <ul>
+          <li><a href="/fulbright">Fulbright Updates</a></li>
+          <li><a href="/fulbright/resources">Resources</a></li>
+          <li><a href="/fulbright/esol">ESOL Tools</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section aria-labelledby="kids-preview-heading">
+      <h3 id="kids-preview-heading">Kids' Corner</h3>
+      <p>
+        Activities, polls, and educational tours designed for young learners.
+      </p>
+      <nav aria-label="Kids' Corner preview links">
+        <ul>
+          <li><a href="/kids-corner">Kids' Corner Home</a></li>
+          <li><a href="/kids-corner/polls">Polls</a></li>
+          <li><a href="/kids-corner/tours">Tours</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section aria-labelledby="author-preview-heading">
+      <h3 id="author-preview-heading">Author</h3>
+      <p>Book news, release updates, and writing-related announcements.</p>
+      <p><a href="/author">Visit Author</a></p>
+    </section>
+
+    <section aria-labelledby="contact-preview-heading">
+      <h3 id="contact-preview-heading">Contact</h3>
+      <p>Reach out for collaborations, classroom connections, or speaking.</p>
+      <p><a href="/contact">Visit Contact</a></p>
+    </section>
   </section>
 </Layout>

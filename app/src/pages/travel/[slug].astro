@@ -4,10 +4,11 @@ import { PortableText } from "astro-portabletext";
 import Layout from "../../layouts/Layout.astro";
 import { formatDate } from "../../utils";
 import { urlFor } from "../../utils/image";
-import { getPost, getPosts } from "../../utils/sanity";
+import { getTravelPost, getTravelPosts } from "../../utils/sanity";
 
 export async function getStaticPaths() {
-  const posts = await getPosts();
+  const posts = await getTravelPosts();
+
   return posts.map((post) => ({
     params: { slug: post.slug.current },
   }));
@@ -16,34 +17,30 @@ export async function getStaticPaths() {
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 const { slug } = Astro.params as Params;
 
-const post = await getPost(slug);
-
-if (post.category === "travel") {
-  return Astro.redirect(`/travel/${post.slug.current}`, 301);
-}
+const post = await getTravelPost(slug);
 ---
 
-<Layout title={post.title || "Post"}>
+<Layout title={post.title || "Travel Story"}>
   <article>
-    {
-      post.mainImage ? (
-        <figure>
-          <img
-            src={urlFor(post.mainImage).url()}
-            alt={post.mainImage.alt || post.title || "Post image"}
-          />
-        </figure>
-      ) : null
-    }
     <header>
-      <h1>{post.title || "Untitled post"}</h1>
-      {post.excerpt ? <p>{post.excerpt}</p> : null}
+      <h1>{post.title || "Untitled travel post"}</h1>
       <p>
         <time datetime={post.publishedAt || post._createdAt}>
           {formatDate(post.publishedAt || post._createdAt)}
         </time>
       </p>
+      {post.excerpt ? <p>{post.excerpt}</p> : null}
     </header>
+    {
+      post.mainImage ? (
+        <figure>
+          <img
+            src={urlFor(post.mainImage).url()}
+            alt={post.mainImage.alt || post.title || "Travel image"}
+          />
+        </figure>
+      ) : null
+    }
     <section>
       <PortableText value={post.body} />
     </section>

@@ -1,9 +1,4 @@
-import {defineField, defineType} from 'sanity'
-
-/**
- * Post schema.  Define and edit the fields for the 'post' content type.
- * Learn more: https://www.sanity.io/docs/schema-types
- */
+import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'post',
@@ -14,6 +9,7 @@ export default defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -26,41 +22,75 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+      options: {
+        list: [
+          { title: 'Travel', value: 'travel' },
+          { title: 'Fulbright', value: 'fulbright' },
+          { title: "Kids' Corner", value: 'kids-corner' },
+          { title: 'Author', value: 'author' },
+        ],
+      },
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
+      validation: (Rule) => Rule.required(),
+      initialValue: new Date().toISOString(),
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'text',
       rows: 4,
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'mainImage',
       title: 'Main image',
       type: 'image',
+      validation: (Rule) => Rule.required(),
       options: {
         hotspot: true,
       },
-			fields: [
-				defineField({
-					name: 'alt',
-					title: 'Alternative text',
-					type: 'string',
-				}),
-			],
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alternative text',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
     }),
     defineField({
       name: 'body',
       title: 'Body',
       type: 'blockContent',
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {
     select: {
       title: 'title',
-      author: 'author.name',
+      category: 'category',
+      publishedAt: 'publishedAt',
       media: 'mainImage',
     },
     prepare(selection) {
-      const {author} = selection
-      return {...selection, subtitle: author && `by ${author}`}
+      const { category, publishedAt } = selection
+      const categoryLabel =
+        category === 'kids-corner'
+          ? "Kids' Corner"
+          : category
+            ? `${category.charAt(0).toUpperCase()}${category.slice(1)}`
+            : 'Uncategorized'
+      const dateLabel = publishedAt ? new Date(publishedAt).toLocaleDateString() : 'No date'
+
+      return { ...selection, subtitle: `${categoryLabel} · ${dateLabel}` }
     },
   },
 })

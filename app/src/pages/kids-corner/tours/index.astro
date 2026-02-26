@@ -1,0 +1,56 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { urlFor } from "../../../utils/image";
+import { getTours } from "../../../utils/sanity";
+
+const tours = await getTours();
+---
+
+<Layout title="Kids' Corner Tours">
+  <section>
+    <h1>Kids' Corner Tours</h1>
+    <p>Explore places and stories written for young learners.</p>
+    {
+      tours.length ? (
+        <ul>
+          {tours.map((tour) => (
+            <li>
+              <article>
+                {tour.gallery?.[0] ? (
+                  <figure>
+                    <img
+                      src={urlFor(tour.gallery[0]).width(900).height(560).url()}
+                      alt={
+                        tour.gallery[0].alt ||
+                        tour.gallery[0].caption ||
+                        tour.title ||
+                        "Tour image"
+                      }
+                    />
+                    {tour.gallery[0].caption ? (
+                      <figcaption>{tour.gallery[0].caption}</figcaption>
+                    ) : null}
+                  </figure>
+                ) : null}
+                <h2>
+                  <a href={`/kids-corner/tours/${tour.slug.current}`}>
+                    {tour.title || "Untitled tour"}
+                  </a>
+                </h2>
+                {tour.description ? <p>{tour.description}</p> : null}
+                {tour.location ? (
+                  <dl>
+                    <dt>Location</dt>
+                    <dd>{tour.location}</dd>
+                  </dl>
+                ) : null}
+              </article>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No tours are published yet.</p>
+      )
+    }
+  </section>
+</Layout>

@@ -1,0 +1,64 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { urlFor } from "../utils/image";
+import { getBooks } from "../utils/sanity";
+
+const books = await getBooks();
+---
+
+<Layout title="Author">
+  <section>
+    <h1>Author</h1>
+    <p>Browse Melissa Craven's current and upcoming books.</p>
+    {
+      books.length ? (
+        <ul>
+          {books.map((book) => (
+            <li>
+              <article>
+                <header>
+                  <h2>{book.title || "Untitled book"}</h2>
+                </header>
+                {book.coverImage ? (
+                  <figure>
+                    <img
+                      src={urlFor(book.coverImage).width(720).url()}
+                      alt={book.coverImage.alt || book.title || "Book cover"}
+                    />
+                  </figure>
+                ) : null}
+                {book.description ? <p>{book.description}</p> : null}
+                <dl>
+                  <dt>Status</dt>
+                  <dd>
+                    {book.status === "published"
+                      ? "Published"
+                      : book.status === "upcoming"
+                        ? "Upcoming"
+                        : "Not specified"}
+                  </dd>
+                  {book.purchaseLinks?.length ? (
+                    <>
+                      <dt>Purchase Links</dt>
+                      <dd>
+                        <ul>
+                          {book.purchaseLinks.map((link) => (
+                            <li>
+                              <a href={link.url}>{link.label}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      </dd>
+                    </>
+                  ) : null}
+                </dl>
+              </article>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No books are listed yet.</p>
+      )
+    }
+  </section>
+</Layout>

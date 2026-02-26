@@ -1,0 +1,50 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { formatDate } from "../utils";
+import { urlFor } from "../utils/image";
+import { getTravelPosts } from "../utils/sanity";
+
+const travelPosts = await getTravelPosts();
+---
+
+<Layout title="Travel">
+  <section>
+    <h1>Travel</h1>
+    <p>Stories, reflections, and practical notes from the road.</p>
+    {
+      travelPosts.length ? (
+        <ul>
+          {travelPosts.map((post) => (
+            <li>
+              <article>
+                {post.mainImage ? (
+                  <figure>
+                    <img
+                      src={urlFor(post.mainImage).width(800).height(500).url()}
+                      alt={post.mainImage.alt || post.title || "Travel image"}
+                    />
+                  </figure>
+                ) : null}
+                <header>
+                  <h2>
+                    <a href={`/travel/${post.slug.current}`}>
+                      {post.title || "Untitled travel post"}
+                    </a>
+                  </h2>
+                  <p>
+                    <time datetime={post.publishedAt || post._createdAt}>
+                      {formatDate(post.publishedAt || post._createdAt)}
+                    </time>
+                  </p>
+                </header>
+                {post.excerpt ? <p>{post.excerpt}</p> : null}
+              </article>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No travel posts are published yet.</p>
+      )
+    }
+  </section>
+</Layout>

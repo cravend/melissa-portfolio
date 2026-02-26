@@ -1,0 +1,77 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { formatDate } from "../utils";
+import {
+  getEsolResources,
+  getFulbrightPosts,
+  getFulbrightPrepResources,
+} from "../utils/sanity";
+
+const updates = await getFulbrightPosts();
+const prepResources = await getFulbrightPrepResources();
+const esolResources = await getEsolResources();
+---
+
+<Layout title="Fulbright">
+  <h1>Fulbright</h1>
+  <p>
+    Follow Fulbright updates, explore preparation materials, and browse ESOL
+    teaching tools.
+  </p>
+
+  <nav aria-label="Fulbright sections">
+    <ul>
+      <li><a href="/fulbright/resources">Resources</a></li>
+      <li><a href="/fulbright/esol">ESOL Tools</a></li>
+    </ul>
+  </nav>
+
+  <section aria-labelledby="fulbright-updates-heading">
+    <h2 id="fulbright-updates-heading">Updates</h2>
+    {
+      updates.length ? (
+        <ul>
+          {updates.map((post) => (
+            <li>
+              <article>
+                <header>
+                  <h3>
+                    <a href={`/fulbright/${post.slug.current}`}>
+                      {post.title || "Untitled Fulbright update"}
+                    </a>
+                  </h3>
+                  <p>
+                    <time datetime={post.publishedAt || post._createdAt}>
+                      {formatDate(post.publishedAt || post._createdAt)}
+                    </time>
+                  </p>
+                </header>
+                {post.excerpt ? <p>{post.excerpt}</p> : null}
+              </article>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No Fulbright updates are published yet.</p>
+      )
+    }
+  </section>
+
+  <section aria-labelledby="fulbright-resources-heading">
+    <h2 id="fulbright-resources-heading">Resources</h2>
+    <p>Preparation materials and supporting documents for Fulbright work.</p>
+    <p>
+      <a href="/fulbright/resources">View all Fulbright resources</a>
+    </p>
+    <p>{prepResources.length} resources currently available.</p>
+  </section>
+
+  <section aria-labelledby="fulbright-esol-heading">
+    <h2 id="fulbright-esol-heading">ESOL Tools</h2>
+    <p>Classroom tools and lesson support resources for ESOL instruction.</p>
+    <p>
+      <a href="/fulbright/esol">View all ESOL tools</a>
+    </p>
+    <p>{esolResources.length} ESOL tools currently available.</p>
+  </section>
+</Layout>

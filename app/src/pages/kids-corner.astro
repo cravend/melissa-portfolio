@@ -1,0 +1,78 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getActivePoll, getLatestTour } from "../utils/sanity";
+
+const [activePoll, latestTour] = await Promise.all([
+  getActivePoll(),
+  getLatestTour(),
+]);
+---
+
+<Layout title="Kids' Corner">
+  <h1>Kids' Corner</h1>
+  <p>Explore weekly questions, classroom-friendly polls, and student tours.</p>
+
+  <nav aria-label="Kids' Corner sections">
+    <ul>
+      <li><a href="/kids-corner/polls">Polls</a></li>
+      <li><a href="/kids-corner/tours">Tours</a></li>
+    </ul>
+  </nav>
+
+  <section aria-labelledby="question-week-heading">
+    <h2 id="question-week-heading">Question of the Week</h2>
+    {
+      activePoll?.question ? (
+        <p>{activePoll.question}</p>
+      ) : (
+        <p>A new question is coming soon. Check back for this week's prompt.</p>
+      )
+    }
+    <p><a href="/kids-corner/polls">Go to poll questions</a></p>
+  </section>
+
+  <section aria-labelledby="latest-tour-heading">
+    <h2 id="latest-tour-heading">Latest Tour</h2>
+    {
+      latestTour ? (
+        <article>
+          <h3>
+            <a href={`/kids-corner/tours/${latestTour.slug.current}`}>
+              {latestTour.title || "Untitled tour"}
+            </a>
+          </h3>
+          {latestTour.description ? <p>{latestTour.description}</p> : null}
+          {latestTour.location ? (
+            <dl>
+              <dt>Location</dt>
+              <dd>{latestTour.location}</dd>
+            </dl>
+          ) : null}
+        </article>
+      ) : (
+        <p>No tours are published yet.</p>
+      )
+    }
+    <p><a href="/kids-corner/tours">Browse all tours</a></p>
+  </section>
+
+  <section aria-labelledby="poll-teaser-heading">
+    <h2 id="poll-teaser-heading">Polls</h2>
+    <p>Share your answer and compare ideas with other kids.</p>
+    {
+      activePoll?.options?.length ? (
+        <article>
+          <h3>{activePoll.question || "Current poll"}</h3>
+          <ul>
+            {activePoll.options.map((option) => (
+              <li>{option.label || "Unnamed option"}</li>
+            ))}
+          </ul>
+        </article>
+      ) : (
+        <p>Poll options will appear here when a poll is active.</p>
+      )
+    }
+    <p><a href="/kids-corner/polls">Visit polls</a></p>
+  </section>
+</Layout>
