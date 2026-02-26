@@ -12,7 +12,11 @@ const projectId = PUBLIC_SANITY_STUDIO_PROJECT_ID;
 const dataset = PUBLIC_SANITY_STUDIO_DATASET;
 
 export default defineConfig({
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+  }),
   vite: {
     plugins: [tailwindcss()],
   },
