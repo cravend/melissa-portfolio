@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
 import { PortableText } from "astro-portabletext";
 import { getFulbrightPrepResources } from "../../utils/sanity";
 
@@ -7,23 +8,33 @@ const resources = await getFulbrightPrepResources();
 ---
 
 <Layout title="Fulbright Resources">
-  <h1>Fulbright Resources</h1>
-  <p>Preparation resources and downloadable materials for Fulbright work.</p>
+  <section class="space-y-2">
+    <h1>Fulbright Resources</h1>
+    <Breadcrumb />
+    <p class="max-w-3xl">
+      Preparation resources and downloadable materials for Fulbright work.
+    </p>
+  </section>
   {
     resources.length ? (
-      <ul>
+      <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
         {resources.map((resource) => (
-          <li>
-            <article>
+          <li class="space-y-4 py-6">
+            <article class="space-y-4">
               <h2>{resource.title || "Untitled resource"}</h2>
               {resource.description ? <p>{resource.description}</p> : null}
-              {resource.body ? <PortableText value={resource.body} /> : null}
+              {resource.body ? (
+                <div class="prose-content">
+                  <PortableText value={resource.body} />
+                </div>
+              ) : null}
               {resource.downloads?.length ? (
                 <section
+                  class="space-y-2 border-l-2 border-brand-400 pl-4 dark:border-brand-600"
                   aria-label={`${resource.title || "Resource"} downloads`}
                 >
                   <h3>Downloads</h3>
-                  <ul>
+                  <ul class="list-disc pl-5">
                     {resource.downloads.map((download) => (
                       <li>
                         {download.url ? (

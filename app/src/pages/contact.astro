@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
 import { getPageCopy } from "../utils/sanity";
 
 const pageCopy = await getPageCopy();
@@ -10,12 +11,14 @@ const intro =
 ---
 
 <Layout title="Contact">
-  <h1>Contact</h1>
+  <section class="space-y-2">
+    <h1>Contact</h1>
+    <Breadcrumb />
+  </section>
 
-  <section>
-    <h2>Get in touch</h2>
+  <section class="space-y-4">
     <p>{intro}</p>
-    <address>
+    <address class="space-y-2">
       <p><a href="mailto:pro@melissacraven.me">pro@melissacraven.me</a></p>
       <p><a href="tel:+447915824236">+447915824236</a></p>
       <p>

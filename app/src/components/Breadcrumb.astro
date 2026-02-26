@@ -1,0 +1,101 @@
+---
+interface Props {
+  currentLabel?: string;
+  parentHref?: string;
+  parentLabel?: string;
+}
+
+const { currentLabel, parentHref, parentLabel } = Astro.props;
+const pathname = Astro.url.pathname;
+
+if (pathname === "/") {
+  return null;
+}
+
+const crumbLabelMap: Record<string, string> = {
+  travel: "Travel",
+  fulbright: "Fulbright",
+  "kids-corner": "Kids' Corner",
+  author: "Author",
+  contact: "Contact",
+  resources: "Resources",
+  esol: "ESOL Tools",
+  polls: "Polls",
+  tours: "Tours",
+  post: "Posts",
+  posts: "Posts",
+};
+
+type BreadcrumbItem = {
+  href: string;
+  label: string;
+};
+
+const segments = pathname
+  .split("/")
+  .filter((segment: string) => segment.length);
+const toTitleCase = (value: string) =>
+  value
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+const breadcrumbs: BreadcrumbItem[] =
+  parentHref && parentLabel && segments.length
+    ? [
+        { href: parentHref, label: parentLabel },
+        {
+          href: pathname,
+          label:
+            currentLabel ||
+            toTitleCase(
+              decodeURIComponent(segments[segments.length - 1]).replace(
+                /-/g,
+                " ",
+              ),
+            ),
+        },
+      ]
+    : segments.map((segment: string, index: number) => {
+        const href = `/${segments.slice(0, index + 1).join("/")}`;
+        const mapped = crumbLabelMap[segment];
+        const decoded = decodeURIComponent(segment).replace(/-/g, " ");
+        const fallbackLabel = toTitleCase(decoded);
+        const isLast = index === segments.length - 1;
+        const label = isLast
+          ? currentLabel || mapped || fallbackLabel
+          : mapped || fallbackLabel;
+
+        return { href, label };
+      });
+---
+
+<nav aria-label="Breadcrumb">
+  <ol
+    class="flex flex-wrap items-center gap-x-2 gap-y-1 space-y-0 text-sm text-zinc-500 dark:text-zinc-400"
+  >
+    <li class="space-y-0 text-sm leading-5">
+      <a class="no-underline hover:underline" href="/"> Home </a>
+    </li>
+    {
+      breadcrumbs.map((crumb: BreadcrumbItem, index: number) => (
+        <li class="flex items-center gap-2 space-y-0 text-sm leading-5">
+          <span aria-hidden="true">/</span>
+          {index === breadcrumbs.length - 1 ? (
+            <span
+              aria-current="page"
+              class="font-medium text-zinc-700 dark:text-zinc-200"
+            >
+              {crumb.label}
+            </span>
+          ) : (
+            <a class="no-underline hover:underline" href={crumb.href}>
+              {crumb.label}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

@@ -2,6 +2,7 @@
 // https://docs.astro.build/en/guides/configuring-astro/#environment-variables
 import { loadEnv } from "vite";
 import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
 
 
 import sanity from "@sanity/astro";
@@ -20,6 +21,9 @@ const dataset = PUBLIC_SANITY_STUDIO_DATASET;
 // https://astro.build/config
 export default defineConfig({
   adapter: vercel(),
+  vite: {
+    plugins: [tailwindcss()],
+  },
   integrations: [
     sanity({
       projectId,

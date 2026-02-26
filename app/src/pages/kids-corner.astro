@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
 import { getActivePoll, getLatestTour, getPageCopy } from "../utils/sanity";
 
 const [activePoll, latestTour, pageCopy] = await Promise.all([
@@ -17,17 +18,20 @@ const pollsSectionDescription =
 ---
 
 <Layout title="Kids' Corner">
-  <h1>Kids' Corner</h1>
-  <p>{intro}</p>
+  <section class="space-y-2">
+    <h1>Kids' Corner</h1>
+    <Breadcrumb />
+    <p class="max-w-3xl">{intro}</p>
+    <p>
+      <a href="/kids-corner/polls">Polls</a> ·{" "}
+      <a href="/kids-corner/tours">Tours</a>
+    </p>
+  </section>
 
-  <nav aria-label="Kids' Corner sections">
-    <ul>
-      <li><a href="/kids-corner/polls">Polls</a></li>
-      <li><a href="/kids-corner/tours">Tours</a></li>
-    </ul>
-  </nav>
-
-  <section aria-labelledby="question-week-heading">
+  <section
+    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
+    aria-labelledby="question-week-heading"
+  >
     <h2 id="question-week-heading">Question of the Week</h2>
     {
       activePoll?.question ? (
@@ -39,11 +43,14 @@ const pollsSectionDescription =
     <p><a href="/kids-corner/polls">Go to poll questions</a></p>
   </section>
 
-  <section aria-labelledby="latest-tour-heading">
+  <section
+    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
+    aria-labelledby="latest-tour-heading"
+  >
     <h2 id="latest-tour-heading">Latest Tour</h2>
     {
       latestTour ? (
-        <article>
+        <article class="space-y-2">
           <h3>
             <a href={`/kids-corner/tours/${latestTour.slug.current}`}>
               {latestTour.title || "Untitled tour"}
@@ -64,14 +71,17 @@ const pollsSectionDescription =
     <p><a href="/kids-corner/tours">Browse all tours</a></p>
   </section>
 
-  <section aria-labelledby="poll-teaser-heading">
+  <section
+    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
+    aria-labelledby="poll-teaser-heading"
+  >
     <h2 id="poll-teaser-heading">Polls</h2>
     <p>{pollsSectionDescription}</p>
     {
       activePoll?.options?.length ? (
-        <article>
+        <article class="space-y-2">
           <h3>{activePoll.question || "Current poll"}</h3>
-          <ul>
+          <ul class="list-disc pl-5">
             {activePoll.options.map((option) => (
               <li>{option.label || "Unnamed option"}</li>
             ))}

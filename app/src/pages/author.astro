@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
 import { urlFor } from "../utils/image";
 import { getBooks, getPageCopy } from "../utils/sanity";
 
@@ -10,51 +11,55 @@ const intro =
 ---
 
 <Layout title="Author">
-  <section>
+  <section class="space-y-2">
     <h1>Author</h1>
-    <p>{intro}</p>
+    <Breadcrumb />
+    <p class="max-w-3xl">{intro}</p>
     {
       books.length ? (
-        <ul>
+        <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
           {books.map((book) => (
-            <li>
-              <article>
-                <header>
-                  <h2>{book.title || "Untitled book"}</h2>
-                </header>
+            <li class="py-6">
+              <article class="grid gap-6 md:grid-cols-[220px_1fr]">
                 {book.coverImage ? (
                   <figure>
                     <img
+                      class="aspect-[3/4] w-full object-cover"
                       src={urlFor(book.coverImage).width(720).url()}
                       alt={book.coverImage.alt || book.title || "Book cover"}
                     />
                   </figure>
                 ) : null}
-                {book.description ? <p>{book.description}</p> : null}
-                <dl>
-                  <dt>Status</dt>
-                  <dd>
-                    {book.status === "published"
-                      ? "Published"
-                      : book.status === "upcoming"
-                        ? "Upcoming"
-                        : "Not specified"}
-                  </dd>
-                  {book.purchaseLinks?.length ? (
-                    <>
-                      <dt>Purchase Links</dt>
-                      <dd>
-                        <ul>
-                          {book.purchaseLinks.map((link) => (
-                            <li>
-                              <a href={link.url}>{link.label}</a>
-                            </li>
-                          ))}
-                        </ul>
-                      </dd>
-                    </>
-                  ) : null}
-                </dl>
+                <div class="space-y-3">
+                  <header class="space-y-2">
+                    <h2>{book.title || "Untitled book"}</h2>
+                  </header>
+                  {book.description ? <p>{book.description}</p> : null}
+                  <dl class="space-y-2">
+                    <dt>Status</dt>
+                    <dd>
+                      {book.status === "published"
+                        ? "Published"
+                        : book.status === "upcoming"
+                          ? "Upcoming"
+                          : "Not specified"}
+                    </dd>
+                    {book.purchaseLinks?.length ? (
+                      <>
+                        <dt>Purchase Links</dt>
+                        <dd>
+                          <ul class="list-disc pl-5">
+                            {book.purchaseLinks.map((link) => (
+                              <li>
+                                <a href={link.url}>{link.label}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </>
+                    ) : null}
+                  </dl>
+                </div>
               </article>
             </li>
           ))}

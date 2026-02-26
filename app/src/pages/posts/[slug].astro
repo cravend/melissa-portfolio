@@ -1,0 +1,60 @@
+---
+import { PortableText } from "astro-portabletext";
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { formatDate } from "../../utils";
+import { urlFor } from "../../utils/image";
+import { getPost, getPosts } from "../../utils/sanity";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug.current },
+  }));
+}
+
+const slug = Astro.params.slug as string;
+const post = await getPost(slug);
+const categoryBreadcrumbMap = {
+  travel: { href: "/travel", label: "Travel" },
+  fulbright: { href: "/fulbright", label: "Fulbright" },
+  "kids-corner": { href: "/kids-corner", label: "Kids' Corner" },
+  author: { href: "/author", label: "Author" },
+} as const;
+const categoryBreadcrumb = post.category
+  ? categoryBreadcrumbMap[post.category]
+  : undefined;
+---
+
+<Layout title={post.title || "Post"}>
+  <article class="mx-auto w-fit space-y-6">
+    <header class="space-y-2">
+      <h1>{post.title || "Untitled post"}</h1>
+      <Breadcrumb
+        currentLabel={post.title || "Untitled post"}
+        parentHref={categoryBreadcrumb?.href}
+        parentLabel={categoryBreadcrumb?.label}
+      />
+      {post.excerpt ? <p>{post.excerpt}</p> : null}
+      <p>
+        <time datetime={post.publishedAt || post._createdAt}>
+          {formatDate(post.publishedAt || post._createdAt)}
+        </time>
+      </p>
+    </header>
+    {
+      post.mainImage ? (
+        <figure>
+          <img
+            class="w-full object-cover"
+            src={urlFor(post.mainImage).url()}
+            alt={post.mainImage.alt || post.title || "Post image"}
+          />
+        </figure>
+      ) : null
+    }
+    <section class="prose-content">
+      <PortableText value={post.body} />
+    </section>
+  </article>
+</Layout>

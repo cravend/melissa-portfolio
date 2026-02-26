@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import type { InferGetStaticParamsType } from "astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
 import { PortableText } from "astro-portabletext";
 import { formatDate } from "../../utils";
 import { urlFor } from "../../utils/image";
@@ -14,16 +14,16 @@ export async function getStaticPaths() {
   }));
 }
 
-type Params = InferGetStaticParamsType<typeof getStaticPaths>;
-const { slug } = Astro.params as Params;
+const { slug } = Astro.params;
 
 const post = await getFulbrightPost(slug);
 ---
 
 <Layout title={post.title || "Fulbright Update"}>
-  <article>
-    <header>
+  <article class="mx-auto max-w-4xl space-y-6">
+    <header class="space-y-2">
       <h1>{post.title || "Untitled Fulbright update"}</h1>
+      <Breadcrumb currentLabel={post.title || "Untitled Fulbright update"} />
       <p>
         <time datetime={post.publishedAt || post._createdAt}>
           {formatDate(post.publishedAt || post._createdAt)}
@@ -35,13 +35,14 @@ const post = await getFulbrightPost(slug);
       post.mainImage ? (
         <figure>
           <img
+            class="w-full object-cover"
             src={urlFor(post.mainImage).url()}
             alt={post.mainImage.alt || post.title || "Fulbright update image"}
           />
         </figure>
       ) : null
     }
-    <section>
+    <section class="prose-content">
       <PortableText value={post.body} />
     </section>
   </article>

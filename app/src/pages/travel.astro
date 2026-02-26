@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
 import { formatDate } from "../utils";
 import { urlFor } from "../utils/image";
 import { getPageCopy, getTravelPosts } from "../utils/sanity";
@@ -15,26 +16,28 @@ const intro =
 ---
 
 <Layout title="Travel">
-  <section>
+  <section class="space-y-2">
     <h1>Travel</h1>
-    <p>{intro}</p>
+    <Breadcrumb />
+    <p class="max-w-3xl">{intro}</p>
     {
       travelPosts.length ? (
-        <ul>
+        <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
           {travelPosts.map((post) => (
-            <li>
-              <article>
+            <li class="py-6">
+              <article class="space-y-4">
                 {post.mainImage ? (
                   <figure>
                     <img
+                      class="aspect-[16/10] w-full max-w-2xl object-cover"
                       src={urlFor(post.mainImage).width(800).height(500).url()}
                       alt={post.mainImage.alt || post.title || "Travel image"}
                     />
                   </figure>
                 ) : null}
-                <header>
+                <header class="space-y-1">
                   <h2>
-                    <a href={`/travel/${post.slug.current}`}>
+                    <a href={`/posts/${post.slug.current}`}>
                       {post.title || "Untitled travel post"}
                     </a>
                   </h2>

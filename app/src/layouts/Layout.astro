@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import { getSiteSettings } from "../utils/sanity";
+import "../styles/global.css";
 
 interface Props {
   title: string;
@@ -11,6 +12,17 @@ const siteSettings = await getSiteSettings();
 const brandName =
   siteSettings?.brandName || siteSettings?.siteTitle || "Melissa Craven";
 const footerText = siteSettings?.footerText || "\u00A9 2026 Melissa Craven";
+const pathname = Astro.url.pathname;
+const navItems = [
+  { href: "/travel", label: "Travel" },
+  { href: "/fulbright", label: "Fulbright" },
+  { href: "/kids-corner", label: "Kids' Corner" },
+  { href: "/author", label: "Author" },
+  { href: "/contact", label: "Contact" },
+];
+
+const isActive = (href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 ---
 
 <!doctype html>
@@ -24,37 +36,46 @@ const footerText = siteSettings?.footerText || "\u00A9 2026 Melissa Craven";
     <ViewTransitions />
   </head>
   <body>
-    <header>
-      <p><a href="/">{brandName}</a></p>
-      <nav aria-label="Main">
-        <ul>
-          <li><a href="/travel">Travel</a></li>
-          <li>
-            <a href="/fulbright">Fulbright</a>
-            <ul>
-              <li><a href="/fulbright">Updates</a></li>
-              <li><a href="/fulbright/resources">Resources</a></li>
-              <li><a href="/fulbright/esol">ESOL Tools</a></li>
+    <div class="site-shell flex min-h-screen flex-col gap-6">
+      <header class="soft-divider border-b py-3">
+        <div
+          class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p
+            class="site-brand text-2xl leading-none font-bold tracking-tight text-zinc-950 dark:text-zinc-50"
+          >
+            <a class="no-underline" href="/">{brandName}</a>
+          </p>
+          <nav aria-label="Main" class="w-full sm:w-auto">
+            <ul
+              class="flex flex-wrap items-center gap-x-1 gap-y-1 space-y-0 sm:justify-end"
+            >
+              {
+                navItems.map((item) => (
+                  <li>
+                    <a
+                      class:list={[
+                        "site-nav-link",
+                        isActive(item.href) && "site-nav-link-active",
+                      ]}
+                      href={item.href}
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
-          </li>
-          <li>
-            <a href="/kids-corner">Kids' Corner</a>
-            <ul>
-              <li><a href="/kids-corner">Home</a></li>
-              <li><a href="/kids-corner/polls">Polls</a></li>
-              <li><a href="/kids-corner/tours">Tours</a></li>
-            </ul>
-          </li>
-          <li><a href="/author">Author</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <slot />
-    </main>
-    <footer>
-      <p>{footerText}</p>
-    </footer>
+          </nav>
+        </div>
+      </header>
+      <main class="flex-1 space-y-6">
+        <slot />
+      </main>
+      <footer class="soft-divider border-t pt-6">
+        <p class="site-meta text-sm">{footerText}</p>
+      </footer>
+    </div>
   </body>
 </html>

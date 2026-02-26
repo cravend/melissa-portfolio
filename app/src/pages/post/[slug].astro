@@ -1,10 +1,5 @@
 ---
-import type { InferGetStaticParamsType } from "astro";
-import { PortableText } from "astro-portabletext";
-import Layout from "../../layouts/Layout.astro";
-import { formatDate } from "../../utils";
-import { urlFor } from "../../utils/image";
-import { getPost, getPosts } from "../../utils/sanity";
+import { getPosts } from "../../utils/sanity";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -13,39 +8,5 @@ export async function getStaticPaths() {
   }));
 }
 
-type Params = InferGetStaticParamsType<typeof getStaticPaths>;
-const { slug } = Astro.params as Params;
-
-const post = await getPost(slug);
-
-if (post.category === "travel") {
-  return Astro.redirect(`/travel/${post.slug.current}`, 301);
-}
+return Astro.redirect(`/posts/${Astro.params.slug}`, 301);
 ---
-
-<Layout title={post.title || "Post"}>
-  <article>
-    {
-      post.mainImage ? (
-        <figure>
-          <img
-            src={urlFor(post.mainImage).url()}
-            alt={post.mainImage.alt || post.title || "Post image"}
-          />
-        </figure>
-      ) : null
-    }
-    <header>
-      <h1>{post.title || "Untitled post"}</h1>
-      {post.excerpt ? <p>{post.excerpt}</p> : null}
-      <p>
-        <time datetime={post.publishedAt || post._createdAt}>
-          {formatDate(post.publishedAt || post._createdAt)}
-        </time>
-      </p>
-    </header>
-    <section>
-      <PortableText value={post.body} />
-    </section>
-  </article>
-</Layout>

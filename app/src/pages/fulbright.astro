@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
 import { formatDate } from "../utils";
 import {
   getPageCopy,
@@ -27,25 +28,25 @@ const esolDescription =
 ---
 
 <Layout title="Fulbright">
-  <h1>Fulbright</h1>
-  <p>{intro}</p>
+  <section class="space-y-2">
+    <h1>Fulbright</h1>
+    <Breadcrumb />
+    <p class="max-w-3xl">{intro}</p>
+    <p>
+      <a href="/fulbright/resources">Resources</a> ·{" "}
+      <a href="/fulbright/esol">ESOL Tools</a>
+    </p>
+  </section>
 
-  <nav aria-label="Fulbright sections">
-    <ul>
-      <li><a href="/fulbright/resources">Resources</a></li>
-      <li><a href="/fulbright/esol">ESOL Tools</a></li>
-    </ul>
-  </nav>
-
-  <section aria-labelledby="fulbright-updates-heading">
+  <section class="space-y-4" aria-labelledby="fulbright-updates-heading">
     <h2 id="fulbright-updates-heading">Updates</h2>
     {
       updates.length ? (
-        <ul>
+        <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
           {updates.map((post) => (
-            <li>
-              <article>
-                <header>
+            <li class="py-5">
+              <article class="space-y-3">
+                <header class="space-y-1">
                   <h3>
                     <a href={`/fulbright/${post.slug.current}`}>
                       {post.title || "Untitled Fulbright update"}
@@ -68,7 +69,10 @@ const esolDescription =
     }
   </section>
 
-  <section aria-labelledby="fulbright-resources-heading">
+  <section
+    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
+    aria-labelledby="fulbright-resources-heading"
+  >
     <h2 id="fulbright-resources-heading">Resources</h2>
     <p>{resourcesDescription}</p>
     <p>
@@ -77,7 +81,10 @@ const esolDescription =
     <p>{prepResources.length} resources currently available.</p>
   </section>
 
-  <section aria-labelledby="fulbright-esol-heading">
+  <section
+    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
+    aria-labelledby="fulbright-esol-heading"
+  >
     <h2 id="fulbright-esol-heading">ESOL Tools</h2>
     <p>{esolDescription}</p>
     <p>

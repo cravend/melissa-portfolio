@@ -8,10 +8,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const postPath =
-  post.category === "travel"
-    ? `/travel/${post.slug.current}`
-    : `/post/${post.slug.current}`;
+const postPath = `/posts/${post.slug.current}`;
 ---
 
 <article>

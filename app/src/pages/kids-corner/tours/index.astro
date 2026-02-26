@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import Breadcrumb from "../../../components/Breadcrumb.astro";
 import { urlFor } from "../../../utils/image";
 import { getTours } from "../../../utils/sanity";
 
@@ -7,18 +8,22 @@ const tours = await getTours();
 ---
 
 <Layout title="Kids' Corner Tours">
-  <section>
+  <section class="space-y-2">
     <h1>Kids' Corner Tours</h1>
-    <p>Explore places and stories written for young learners.</p>
+    <Breadcrumb />
+    <p class="max-w-3xl">
+      Explore places and stories written for young learners.
+    </p>
     {
       tours.length ? (
-        <ul>
+        <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
           {tours.map((tour) => (
-            <li>
-              <article>
+            <li class="py-6">
+              <article class="space-y-4">
                 {tour.gallery?.[0] ? (
-                  <figure>
+                  <figure class="space-y-2">
                     <img
+                      class="aspect-[16/10] w-full max-w-2xl object-cover"
                       src={urlFor(tour.gallery[0]).width(900).height(560).url()}
                       alt={
                         tour.gallery[0].alt ||

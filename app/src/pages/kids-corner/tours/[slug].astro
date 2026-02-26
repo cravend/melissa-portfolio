@@ -1,7 +1,7 @@
 ---
-import type { InferGetStaticParamsType } from "astro";
 import { PortableText } from "astro-portabletext";
 import Layout from "../../../layouts/Layout.astro";
+import Breadcrumb from "../../../components/Breadcrumb.astro";
 import { urlFor } from "../../../utils/image";
 import { getTour, getTours } from "../../../utils/sanity";
 
@@ -13,20 +13,20 @@ export async function getStaticPaths() {
   }));
 }
 
-type Params = InferGetStaticParamsType<typeof getStaticPaths>;
-const { slug } = Astro.params as Params;
+const { slug } = Astro.params;
 
 const tour = await getTour(slug);
 ---
 
 <Layout title={tour.title || "Tour Entry"}>
-  <article>
-    <header>
+  <article class="mx-auto max-w-4xl space-y-6">
+    <header class="space-y-3">
       <h1>{tour.title || "Untitled tour"}</h1>
+      <Breadcrumb currentLabel={tour.title || "Untitled tour"} />
       {tour.description ? <p>{tour.description}</p> : null}
       {
         tour.location ? (
-          <dl>
+          <dl class="space-y-1">
             <dt>Location</dt>
             <dd>{tour.location}</dd>
           </dl>
@@ -36,13 +36,14 @@ const tour = await getTour(slug);
 
     {
       tour.gallery?.length ? (
-        <section aria-labelledby="tour-gallery-heading">
+        <section class="space-y-3" aria-labelledby="tour-gallery-heading">
           <h2 id="tour-gallery-heading">Gallery</h2>
-          <ul>
+          <ul class="grid gap-4 md:grid-cols-2">
             {tour.gallery.map((image) => (
-              <li>
-                <figure>
+              <li class="space-y-2 border-t border-orange-200/70 pt-5 dark:border-brand-900/60">
+                <figure class="space-y-2">
                   <img
+                    class="aspect-[16/10] w-full object-cover"
                     src={urlFor(image).width(1200).url()}
                     alt={
                       image.alt || image.caption || tour.title || "Tour image"
@@ -61,7 +62,7 @@ const tour = await getTour(slug);
 
     {
       tour.body?.length ? (
-        <section aria-labelledby="tour-story-heading">
+        <section class="prose-content" aria-labelledby="tour-story-heading">
           <h2 id="tour-story-heading">Tour Story</h2>
           <PortableText value={tour.body} />
         </section>
