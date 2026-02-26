@@ -1,33 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { urlFor } from "../utils/image";
-import { getPageCopy, getSiteSettings } from "../utils/sanity";
+import { getSiteSettings } from "../utils/sanity";
 
-const [siteSettings, pageCopy] = await Promise.all([
-  getSiteSettings(),
-  getPageCopy(),
-]);
-const homeCopy = pageCopy?.home;
-const siteTitle = siteSettings?.siteTitle || "Melissa Craven";
-const bio =
-  siteSettings?.bio ||
-  "Melissa Craven shares travel writing, Fulbright teaching resources, stories for kids, and updates about her author work.";
+const siteSettings = await getSiteSettings();
+const homeCopy = siteSettings?.home;
+const siteTitle = siteSettings?.siteTitle ?? "---";
+const bio = siteSettings?.bio ?? "---";
 const headshot = siteSettings?.headshot;
-const travelDescription =
-  homeCopy?.travelDescription ||
-  "Stories, reflections, and updates from Melissa's travels.";
-const fulbrightDescription =
-  homeCopy?.fulbrightDescription ||
-  "Updates from Fulbright work, plus resources and ESOL teaching tools.";
-const kidsDescription =
-  homeCopy?.kidsDescription ||
-  "Activities, polls, and educational tours designed for young learners.";
-const authorDescription =
-  homeCopy?.authorDescription ||
-  "Book news, release updates, and writing-related announcements.";
-const contactDescription =
-  homeCopy?.contactDescription ||
-  "Reach out for collaborations, classroom connections, or speaking.";
+const travelDescription = homeCopy?.travelDescription ?? "---";
+const fulbrightDescription = homeCopy?.fulbrightDescription ?? "---";
+const kidsDescription = homeCopy?.kidsDescription ?? "---";
+const authorDescription = homeCopy?.authorDescription ?? "---";
+const contactDescription = homeCopy?.contactDescription ?? "---";
 ---
 
 <Layout title={siteTitle}>
@@ -37,17 +22,26 @@ const contactDescription =
     <h1>Writing, Teaching, and Storytelling</h1>
     <div class="grid gap-6 md:grid-cols-[220px_1fr]">
       {
-        headshot ? (
+        headshot?.asset ? (
           <figure>
             <img
               class="aspect-square w-full object-cover"
               src={urlFor(headshot).width(720).url()}
-              alt={headshot.alt || `${siteTitle} headshot`}
+              alt={headshot.alt}
             />
           </figure>
-        ) : null
+        ) : (
+          <div />
+        )
       }
-      <p class="max-w-3xl">{bio}</p>
+      <div class="space-y-2">
+        {
+          bio
+            .split(/\n\n+/)
+            .filter(Boolean)
+            .map((para) => <p>{para.trim()}</p>)
+        }
+      </div>
     </div>
   </section>
 

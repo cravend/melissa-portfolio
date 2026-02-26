@@ -1,0 +1,57 @@
+---
+import { PortableText } from "astro-portabletext";
+import type { Resource } from "../utils/sanity";
+
+interface Props {
+  resources: Resource[];
+  emptyMessage: string;
+}
+
+const { resources, emptyMessage } = Astro.props;
+---
+
+{
+  resources.length ? (
+    <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
+      {resources.map((resource) => {
+        const resolvedTitle = resource.title ?? "---";
+        return (
+          <li class="space-y-4 py-6">
+            <article class="space-y-4">
+              <h2>{resolvedTitle}</h2>
+              {resource.description ? <p>{resource.description}</p> : null}
+              {resource.body ? (
+                <div class="prose-content">
+                  <PortableText value={resource.body} />
+                </div>
+              ) : null}
+              {resource.downloads?.length ? (
+                <section
+                  class="space-y-2 border-l-2 border-brand-400 pl-4 dark:border-brand-600"
+                  aria-label={`${resolvedTitle} downloads`}
+                >
+                  <h3>Downloads</h3>
+                  <ul class="list-disc pl-5">
+                    {resource.downloads.map((download) => (
+                      <li>
+                        {download.url ? (
+                          <a href={download.url}>{download.label ?? "---"}</a>
+                        ) : (
+                          <span>{download.label ?? "---"}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : (
+                <p>No downloads are available yet.</p>
+              )}
+            </article>
+          </li>
+        );
+      })}
+    </ul>
+  ) : (
+    <p>{emptyMessage}</p>
+  )
+}

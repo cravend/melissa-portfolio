@@ -10,6 +10,7 @@ export default defineType({
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      initialValue: 'Untitled tour',
     }),
     defineField({
       name: 'slug',
@@ -54,6 +55,7 @@ export default defineType({
               name: 'alt',
               title: 'Alternative text',
               type: 'string',
+              initialValue: 'Tour image',
             }),
             defineField({
               name: 'caption',

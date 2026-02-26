@@ -3,35 +3,29 @@ import Layout from "../layouts/Layout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { formatDate } from "../utils";
 import {
-  getPageCopy,
-  getEsolResources,
-  getFulbrightPosts,
-  getFulbrightPrepResources,
+  getPostsByCategory,
+  getResourcesByCategory,
+  getFulbrightPage,
 } from "../utils/sanity";
+import { getPostPath } from "../utils/routes";
 
-const [updates, prepResources, esolResources, pageCopy] = await Promise.all([
-  getFulbrightPosts(),
-  getFulbrightPrepResources(),
-  getEsolResources(),
-  getPageCopy(),
-]);
-const fulbrightCopy = pageCopy?.fulbright;
-const intro =
-  fulbrightCopy?.intro ||
-  "Follow Fulbright updates, explore preparation materials, and browse ESOL teaching tools.";
-const resourcesDescription =
-  fulbrightCopy?.resourcesDescription ||
-  "Preparation materials and supporting documents for Fulbright work.";
-const esolDescription =
-  fulbrightCopy?.esolDescription ||
-  "Classroom tools and lesson support resources for ESOL instruction.";
+const [updates, prepResources, esolResources, fulbrightPage] =
+  await Promise.all([
+    getPostsByCategory("fulbright"),
+    getResourcesByCategory("fulbright-prep"),
+    getResourcesByCategory("esol"),
+    getFulbrightPage(),
+  ]);
+const intro = fulbrightPage?.intro ?? "---";
+const resourcesDescription = fulbrightPage?.resourcesDescription ?? "---";
+const esolDescription = fulbrightPage?.esolDescription ?? "---";
 ---
 
 <Layout title="Fulbright">
   <section class="space-y-2">
     <h1>Fulbright</h1>
     <Breadcrumb />
-    <p class="max-w-3xl">{intro}</p>
+    <p>{intro}</p>
     <p>
       <a href="/fulbright/resources">Resources</a> ·{" "}
       <a href="/fulbright/esol">ESOL Tools</a>
@@ -48,8 +42,8 @@ const esolDescription =
               <article class="space-y-3">
                 <header class="space-y-1">
                   <h3>
-                    <a href={`/fulbright/${post.slug.current}`}>
-                      {post.title || "Untitled Fulbright update"}
+                    <a href={getPostPath(post.slug.current, post.category)}>
+                      {post.title ?? "---"}
                     </a>
                   </h3>
                   <p>

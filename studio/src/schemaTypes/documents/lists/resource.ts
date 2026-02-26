@@ -10,6 +10,7 @@ export default defineType({
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      initialValue: 'Untitled resource',
     }),
     defineField({
       name: 'slug',
@@ -59,6 +60,7 @@ export default defineType({
               title: 'Label',
               type: 'string',
               validation: (Rule) => Rule.required(),
+              initialValue: 'Download file',
             }),
             defineField({
               name: 'file',

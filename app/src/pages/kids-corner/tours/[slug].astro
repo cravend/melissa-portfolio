@@ -18,11 +18,11 @@ const { slug } = Astro.params;
 const tour = await getTour(slug);
 ---
 
-<Layout title={tour.title || "Tour Entry"}>
-  <article class="mx-auto max-w-4xl space-y-6">
+<Layout title={tour.title ?? "---"}>
+  <article class="space-y-6">
     <header class="space-y-3">
-      <h1>{tour.title || "Untitled tour"}</h1>
-      <Breadcrumb currentLabel={tour.title || "Untitled tour"} />
+      <h1>{tour.title ?? "---"}</h1>
+      <Breadcrumb currentLabel={tour.title ?? "---"} />
       {tour.description ? <p>{tour.description}</p> : null}
       {
         tour.location ? (
@@ -45,9 +45,7 @@ const tour = await getTour(slug);
                   <img
                     class="aspect-[16/10] w-full object-cover"
                     src={urlFor(image).width(1200).url()}
-                    alt={
-                      image.alt || image.caption || tour.title || "Tour image"
-                    }
+                    alt={image.alt ?? image.caption ?? tour.title ?? "---"}
                   />
                   {image.caption ? (
                     <figcaption>{image.caption}</figcaption>

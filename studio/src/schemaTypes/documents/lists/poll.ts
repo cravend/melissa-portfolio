@@ -10,6 +10,7 @@ export default defineType({
       title: 'Question',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      initialValue: 'Current poll',
     }),
     defineField({
       name: 'options',
@@ -27,6 +28,7 @@ export default defineType({
               title: 'Label',
               type: 'string',
               validation: (Rule) => Rule.required(),
+              initialValue: 'Unnamed option',
             }),
             defineField({
               name: 'votes',

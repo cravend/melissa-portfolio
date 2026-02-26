@@ -1,13 +1,31 @@
 ---
-import { getTravelPosts } from "../../utils/sanity";
+import Layout from "../../layouts/Layout.astro";
+import PostDetail from "../../components/PostDetail.astro";
+import { getPostByCategory, getPostsByCategory } from "../../utils/sanity";
+import { POST_DETAIL_CATEGORY_ROUTES } from "../../utils/routes";
 
 export async function getStaticPaths() {
-  const posts = await getTravelPosts();
+  const posts = await getPostsByCategory("travel");
 
   return posts.map((post) => ({
     params: { slug: post.slug.current },
   }));
 }
 
-return Astro.redirect(`/posts/${Astro.params.slug}`, 301);
+const slug = Astro.params.slug as string;
+const post = await getPostByCategory(slug, "travel");
+
+if (!post) {
+  return Astro.redirect("/travel", 302);
+}
+
+const parentRoute = POST_DETAIL_CATEGORY_ROUTES.travel;
 ---
+
+<Layout title={post.title ?? "---"}>
+  <PostDetail
+    post={post}
+    parentHref={parentRoute.href}
+    parentLabel={parentRoute.label}
+  />
+</Layout>

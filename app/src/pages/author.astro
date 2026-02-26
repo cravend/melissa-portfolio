@@ -2,19 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { urlFor } from "../utils/image";
-import { getBooks, getPageCopy } from "../utils/sanity";
+import { getBooks, getAuthorPage } from "../utils/sanity";
 
-const [books, pageCopy] = await Promise.all([getBooks(), getPageCopy()]);
-const authorCopy = pageCopy?.author;
-const intro =
-  authorCopy?.intro || "Browse Melissa Craven's current and upcoming books.";
+const [books, authorPage] = await Promise.all([getBooks(), getAuthorPage()]);
+const intro = authorPage?.intro ?? "---";
 ---
 
 <Layout title="Author">
   <section class="space-y-2">
     <h1>Author</h1>
     <Breadcrumb />
-    <p class="max-w-3xl">{intro}</p>
+    <p>{intro}</p>
     {
       books.length ? (
         <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
@@ -26,13 +24,13 @@ const intro =
                     <img
                       class="aspect-[3/4] w-full object-cover"
                       src={urlFor(book.coverImage).width(720).url()}
-                      alt={book.coverImage.alt || book.title || "Book cover"}
+                      alt={book.coverImage?.alt ?? "---"}
                     />
                   </figure>
                 ) : null}
                 <div class="space-y-3">
                   <header class="space-y-2">
-                    <h2>{book.title || "Untitled book"}</h2>
+                    <h2>{book.title ?? "---"}</h2>
                   </header>
                   {book.description ? <p>{book.description}</p> : null}
                   <dl class="space-y-2">
@@ -42,7 +40,7 @@ const intro =
                         ? "Published"
                         : book.status === "upcoming"
                           ? "Upcoming"
-                          : "Not specified"}
+                          : "---"}
                     </dd>
                     {book.purchaseLinks?.length ? (
                       <>

@@ -1,10 +1,17 @@
 import blockContent from './objects/blockContent'
-import book from './documents/book'
-import pageCopy from './documents/pageCopy'
-import poll from './documents/poll'
-import post from './documents/post'
-import resource from './documents/resource'
-import siteSettings from './documents/siteSettings'
-import tour from './documents/tour'
+import book from './documents/lists/book'
+import poll from './documents/lists/poll'
+import post from './documents/lists/post'
+import resource from './documents/lists/resource'
+import tour from './documents/lists/tour'
+import authorPage from './documents/pages/authorPage'
+import contactPage from './documents/pages/contactPage'
+import fulbrightPage from './documents/pages/fulbrightPage'
+import kidsCornerPage from './documents/pages/kidsCornerPage'
+import siteSettings from './documents/pages/siteSettings'
+import travelPage from './documents/pages/travelPage'
 
-export const schemaTypes = [post, resource, tour, poll, book, siteSettings, pageCopy, blockContent]
+const listDocuments = [post, resource, tour, poll, book]
+const pageConfig = [siteSettings, travelPage, fulbrightPage, kidsCornerPage, authorPage, contactPage]
+
+export const schemaTypes = [...listDocuments, ...pageConfig, blockContent]

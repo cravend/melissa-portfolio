@@ -10,6 +10,7 @@ export default defineType({
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      initialValue: 'Untitled book',
     }),
     defineField({
       name: 'coverImage',
@@ -23,6 +24,7 @@ export default defineType({
           name: 'alt',
           title: 'Alternative text',
           type: 'string',
+          initialValue: 'Book cover',
         }),
       ],
     }),
@@ -63,6 +65,7 @@ export default defineType({
       title: 'Status',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      initialValue: 'upcoming',
       options: {
         list: [
           { title: 'Upcoming', value: 'upcoming' },

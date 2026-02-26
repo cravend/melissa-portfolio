@@ -10,6 +10,7 @@ export default defineType({
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      initialValue: 'Untitled post',
     }),
     defineField({
       name: 'slug',
@@ -63,6 +64,7 @@ export default defineType({
           title: 'Alternative text',
           type: 'string',
           validation: (Rule) => Rule.required(),
+          initialValue: 'Post image',
         }),
       ],
     }),

@@ -1,4 +1,6 @@
 ---
+import { ROUTE_LABELS } from "../utils/routes";
+
 interface Props {
   currentLabel?: string;
   parentHref?: string;
@@ -11,20 +13,6 @@ const pathname = Astro.url.pathname;
 if (pathname === "/") {
   return null;
 }
-
-const crumbLabelMap: Record<string, string> = {
-  travel: "Travel",
-  fulbright: "Fulbright",
-  "kids-corner": "Kids' Corner",
-  author: "Author",
-  contact: "Contact",
-  resources: "Resources",
-  esol: "ESOL Tools",
-  polls: "Polls",
-  tours: "Tours",
-  post: "Posts",
-  posts: "Posts",
-};
 
 type BreadcrumbItem = {
   href: string;
@@ -59,7 +47,7 @@ const breadcrumbs: BreadcrumbItem[] =
       ]
     : segments.map((segment: string, index: number) => {
         const href = `/${segments.slice(0, index + 1).join("/")}`;
-        const mapped = crumbLabelMap[segment];
+        const mapped = ROUTE_LABELS[segment];
         const decoded = decodeURIComponent(segment).replace(/-/g, " ");
         const fallbackLabel = toTitleCase(decoded);
         const isLast = index === segments.length - 1;

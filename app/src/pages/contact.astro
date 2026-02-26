@@ -1,13 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import { getPageCopy } from "../utils/sanity";
+import { getContactPage } from "../utils/sanity";
 
-const pageCopy = await getPageCopy();
-const contactCopy = pageCopy?.contact;
-const intro =
-  contactCopy?.intro ||
-  "I am happy to connect about travel writing, Fulbright and ESOL resources, or author events.";
+const contactPage = await getContactPage();
+const intro = contactPage?.intro ?? "---";
+const contactLinks = contactPage?.contactLinks ?? [];
 ---
 
 <Layout title="Contact">
@@ -19,12 +17,15 @@ const intro =
   <section class="space-y-4">
     <p>{intro}</p>
     <address class="space-y-2">
-      <p><a href="mailto:pro@melissacraven.me">pro@melissacraven.me</a></p>
-      <p><a href="tel:+447915824236">+447915824236</a></p>
-      <p>
-        <a href="https://www.linkedin.com/in/melissa-craven-fb2526/">LinkedIn</a
-        >
-      </p>
+      <ul>
+        {
+          contactLinks.map((link) => (
+            <li>
+              <a href={link.url}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
     </address>
   </section>
 </Layout>

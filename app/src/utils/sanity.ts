@@ -3,13 +3,25 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { Image, ImageAsset, Slug } from "@sanity/types";
 import groq from "groq";
 
+export type PostCategory = "travel" | "fulbright" | "kids-corner" | "author";
+export type ResourceCategory = "fulbright-prep" | "esol";
+
 export async function getPosts(): Promise<Post[]> {
   return await sanityClient.fetch(
-    groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc)`
+    groq`*[_type == "post" && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`
   );
 }
 
-export async function getPost(slug: string): Promise<Post> {
+export async function getPostsByCategory(category: PostCategory): Promise<Post[]> {
+  return await sanityClient.fetch(
+    groq`*[_type == "post" && category == $category && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`,
+    {
+      category,
+    }
+  );
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
   return await sanityClient.fetch(
     groq`*[_type == "post" && slug.current == $slug][0]`,
     {
@@ -18,57 +30,33 @@ export async function getPost(slug: string): Promise<Post> {
   );
 }
 
-export async function getTravelPosts(): Promise<Post[]> {
+export async function getPostByCategory(
+  slug: string,
+  category: PostCategory
+): Promise<Post | null> {
   return await sanityClient.fetch(
-    groq`*[_type == "post" && category == "travel" && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`
-  );
-}
-
-export async function getTravelPost(slug: string): Promise<Post> {
-  return await sanityClient.fetch(
-    groq`*[_type == "post" && category == "travel" && slug.current == $slug][0]`,
+    groq`*[_type == "post" && category == $category && slug.current == $slug][0]`,
     {
       slug,
+      category,
     }
   );
 }
 
-export async function getFulbrightPosts(): Promise<Post[]> {
+export async function getResourcesByCategory(
+  category: ResourceCategory
+): Promise<Resource[]> {
   return await sanityClient.fetch(
-    groq`*[_type == "post" && category == "fulbright" && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`
-  );
-}
-
-export async function getFulbrightPost(slug: string): Promise<Post> {
-  return await sanityClient.fetch(
-    groq`*[_type == "post" && category == "fulbright" && slug.current == $slug][0]`,
-    {
-      slug,
-    }
-  );
-}
-
-export async function getFulbrightPrepResources(): Promise<Resource[]> {
-  return await sanityClient.fetch(
-    groq`*[_type == "resource" && category == "fulbright-prep" && defined(slug.current)] | order(_createdAt desc){
+    groq`*[_type == "resource" && category == $category && defined(slug.current)] | order(_createdAt desc){
       ...,
       downloads[]{
         label,
         "url": file.asset->url
       }
-    }`
-  );
-}
-
-export async function getEsolResources(): Promise<Resource[]> {
-  return await sanityClient.fetch(
-    groq`*[_type == "resource" && category == "esol" && defined(slug.current)] | order(_createdAt desc){
-      ...,
-      downloads[]{
-        label,
-        "url": file.asset->url
-      }
-    }`
+    }`,
+    {
+      category,
+    }
   );
 }
 
@@ -106,21 +94,39 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
       bio,
       headshot,
       brandName,
-      footerText
+      footerText,
+      home
     }`
   );
 }
 
-export async function getPageCopy(): Promise<PageCopy | null> {
+export async function getTravelPage(): Promise<TravelPageCopy | null> {
   return await sanityClient.fetch(
-    groq`*[_type == "pageCopy"][0]{
-      home,
-      travel,
-      fulbright,
-      kidsCorner,
-      author,
-      contact
-    }`
+    groq`*[_type == "travelPage"][0]{ intro }`
+  );
+}
+
+export async function getFulbrightPage(): Promise<FulbrightPageCopy | null> {
+  return await sanityClient.fetch(
+    groq`*[_type == "fulbrightPage"][0]{ intro, resourcesDescription, esolDescription }`
+  );
+}
+
+export async function getKidsCornerPage(): Promise<KidsCornerPageCopy | null> {
+  return await sanityClient.fetch(
+    groq`*[_type == "kidsCornerPage"][0]{ intro, pollsSectionDescription }`
+  );
+}
+
+export async function getAuthorPage(): Promise<BasicPageCopy | null> {
+  return await sanityClient.fetch(
+    groq`*[_type == "authorPage"][0]{ intro }`
+  );
+}
+
+export async function getContactPage(): Promise<ContactPageCopy | null> {
+  return await sanityClient.fetch(
+    groq`*[_type == "contactPage"][0]{ intro, contactLinks }`
   );
 }
 
@@ -141,7 +147,7 @@ export interface Post {
   _createdAt: string;
   title?: string;
   slug: Slug;
-  category?: "travel" | "fulbright" | "kids-corner" | "author";
+  category?: PostCategory;
   publishedAt?: string;
   excerpt?: string;
   mainImage?: ImageAsset & { alt?: string };
@@ -158,7 +164,7 @@ export interface Resource {
   _createdAt: string;
   title?: string;
   slug: Slug;
-  category?: "fulbright-prep" | "esol";
+  category?: ResourceCategory;
   description?: string;
   body?: PortableTextBlock[];
   downloads?: ResourceDownload[];
@@ -170,15 +176,11 @@ export interface SiteSettings {
   headshot?: ImageAsset & { alt?: string };
   brandName?: string;
   footerText?: string;
+  home?: HomePageCopy;
 }
 
-export interface PageCopy {
-  home?: HomePageCopy;
-  travel?: BasicPageCopy;
-  fulbright?: FulbrightPageCopy;
-  kidsCorner?: KidsCornerPageCopy;
-  author?: BasicPageCopy;
-  contact?: BasicPageCopy;
+export interface TravelPageCopy {
+  intro?: string;
 }
 
 export interface BasicPageCopy {
@@ -193,13 +195,25 @@ export interface HomePageCopy {
   contactDescription?: string;
 }
 
-export interface FulbrightPageCopy extends BasicPageCopy {
+export interface FulbrightPageCopy {
+  intro?: string;
   resourcesDescription?: string;
   esolDescription?: string;
 }
 
-export interface KidsCornerPageCopy extends BasicPageCopy {
+export interface KidsCornerPageCopy {
+  intro?: string;
   pollsSectionDescription?: string;
+}
+
+export interface ContactLink {
+  label: string;
+  url: string;
+}
+
+export interface ContactPageCopy {
+  intro?: string;
+  contactLinks?: ContactLink[];
 }
 
 export interface Tour {

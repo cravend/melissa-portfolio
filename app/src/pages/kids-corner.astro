@@ -1,27 +1,27 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import { getActivePoll, getLatestTour, getPageCopy } from "../utils/sanity";
+import {
+  getActivePoll,
+  getLatestTour,
+  getKidsCornerPage,
+} from "../utils/sanity";
 
-const [activePoll, latestTour, pageCopy] = await Promise.all([
+const [activePoll, latestTour, kidsCornerPage] = await Promise.all([
   getActivePoll(),
   getLatestTour(),
-  getPageCopy(),
+  getKidsCornerPage(),
 ]);
-const kidsCopy = pageCopy?.kidsCorner;
-const intro =
-  kidsCopy?.intro ||
-  "Explore weekly questions, classroom-friendly polls, and student tours.";
+const intro = kidsCornerPage?.intro ?? "---";
 const pollsSectionDescription =
-  kidsCopy?.pollsSectionDescription ||
-  "Share your answer and compare ideas with other kids.";
+  kidsCornerPage?.pollsSectionDescription ?? "---";
 ---
 
 <Layout title="Kids' Corner">
   <section class="space-y-2">
     <h1>Kids' Corner</h1>
     <Breadcrumb />
-    <p class="max-w-3xl">{intro}</p>
+    <p>{intro}</p>
     <p>
       <a href="/kids-corner/polls">Polls</a> ·{" "}
       <a href="/kids-corner/tours">Tours</a>
@@ -34,8 +34,8 @@ const pollsSectionDescription =
   >
     <h2 id="question-week-heading">Question of the Week</h2>
     {
-      activePoll?.question ? (
-        <p>{activePoll.question}</p>
+      activePoll ? (
+        <p>{activePoll.question ?? "---"}</p>
       ) : (
         <p>A new question is coming soon. Check back for this week's prompt.</p>
       )
@@ -53,7 +53,7 @@ const pollsSectionDescription =
         <article class="space-y-2">
           <h3>
             <a href={`/kids-corner/tours/${latestTour.slug.current}`}>
-              {latestTour.title || "Untitled tour"}
+              {latestTour.title ?? "---"}
             </a>
           </h3>
           {latestTour.description ? <p>{latestTour.description}</p> : null}
@@ -80,10 +80,10 @@ const pollsSectionDescription =
     {
       activePoll?.options?.length ? (
         <article class="space-y-2">
-          <h3>{activePoll.question || "Current poll"}</h3>
+          <h3>{activePoll.question ?? "---"}</h3>
           <ul class="list-disc pl-5">
             {activePoll.options.map((option) => (
-              <li>{option.label || "Unnamed option"}</li>
+              <li>{option.label ?? "---"}</li>
             ))}
           </ul>
         </article>

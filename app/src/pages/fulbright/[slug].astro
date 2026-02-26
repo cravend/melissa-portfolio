@@ -1,49 +1,31 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Breadcrumb from "../../components/Breadcrumb.astro";
-import { PortableText } from "astro-portabletext";
-import { formatDate } from "../../utils";
-import { urlFor } from "../../utils/image";
-import { getFulbrightPost, getFulbrightPosts } from "../../utils/sanity";
+import PostDetail from "../../components/PostDetail.astro";
+import { getPostByCategory, getPostsByCategory } from "../../utils/sanity";
+import { POST_DETAIL_CATEGORY_ROUTES } from "../../utils/routes";
 
 export async function getStaticPaths() {
-  const posts = await getFulbrightPosts();
+  const posts = await getPostsByCategory("fulbright");
 
   return posts.map((post) => ({
     params: { slug: post.slug.current },
   }));
 }
 
-const { slug } = Astro.params;
+const slug = Astro.params.slug as string;
+const post = await getPostByCategory(slug, "fulbright");
 
-const post = await getFulbrightPost(slug);
+if (!post) {
+  return Astro.redirect("/fulbright", 302);
+}
+
+const parentRoute = POST_DETAIL_CATEGORY_ROUTES.fulbright;
 ---
 
-<Layout title={post.title || "Fulbright Update"}>
-  <article class="mx-auto max-w-4xl space-y-6">
-    <header class="space-y-2">
-      <h1>{post.title || "Untitled Fulbright update"}</h1>
-      <Breadcrumb currentLabel={post.title || "Untitled Fulbright update"} />
-      <p>
-        <time datetime={post.publishedAt || post._createdAt}>
-          {formatDate(post.publishedAt || post._createdAt)}
-        </time>
-      </p>
-      {post.excerpt ? <p>{post.excerpt}</p> : null}
-    </header>
-    {
-      post.mainImage ? (
-        <figure>
-          <img
-            class="w-full object-cover"
-            src={urlFor(post.mainImage).url()}
-            alt={post.mainImage.alt || post.title || "Fulbright update image"}
-          />
-        </figure>
-      ) : null
-    }
-    <section class="prose-content">
-      <PortableText value={post.body} />
-    </section>
-  </article>
+<Layout title={post.title ?? "---"}>
+  <PostDetail
+    post={post}
+    parentHref={parentRoute.href}
+    parentLabel={parentRoute.label}
+  />
 </Layout>

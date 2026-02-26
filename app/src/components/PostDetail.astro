@@ -1,0 +1,47 @@
+---
+import { PortableText } from "astro-portabletext";
+import Breadcrumb from "./Breadcrumb.astro";
+import { formatDate } from "../utils";
+import { urlFor } from "../utils/image";
+import type { Post } from "../utils/sanity";
+
+interface Props {
+  post: Post;
+  parentHref?: string;
+  parentLabel?: string;
+}
+
+const { post, parentHref, parentLabel } = Astro.props;
+const resolvedTitle = post.title ?? "---";
+---
+
+<article class="space-y-6">
+  <header class="space-y-2">
+    <h1>{resolvedTitle}</h1>
+    <Breadcrumb
+      currentLabel={resolvedTitle}
+      parentHref={parentHref}
+      parentLabel={parentLabel}
+    />
+    {post.excerpt ? <p>{post.excerpt}</p> : null}
+    <p>
+      <time datetime={post.publishedAt || post._createdAt}>
+        {formatDate(post.publishedAt || post._createdAt)}
+      </time>
+    </p>
+  </header>
+  {
+    post.mainImage ? (
+      <figure>
+        <img
+          class="w-full object-cover"
+          src={urlFor(post.mainImage).url()}
+          alt={post.mainImage?.alt ?? "---"}
+        />
+      </figure>
+    ) : null
+  }
+  <section class="prose-content">
+    <PortableText value={post.body} />
+  </section>
+</article>

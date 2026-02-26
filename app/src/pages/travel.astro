@@ -3,23 +3,21 @@ import Layout from "../layouts/Layout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { formatDate } from "../utils";
 import { urlFor } from "../utils/image";
-import { getPageCopy, getTravelPosts } from "../utils/sanity";
+import { getTravelPage, getPostsByCategory } from "../utils/sanity";
+import { getPostPath } from "../utils/routes";
 
-const [travelPosts, pageCopy] = await Promise.all([
-  getTravelPosts(),
-  getPageCopy(),
+const [travelPosts, travelPage] = await Promise.all([
+  getPostsByCategory("travel"),
+  getTravelPage(),
 ]);
-const travelCopy = pageCopy?.travel;
-const intro =
-  travelCopy?.intro ||
-  "Stories, reflections, and practical notes from the road.";
+const intro = travelPage?.intro ?? "---";
 ---
 
 <Layout title="Travel">
   <section class="space-y-2">
     <h1>Travel</h1>
     <Breadcrumb />
-    <p class="max-w-3xl">{intro}</p>
+    <p>{intro}</p>
     {
       travelPosts.length ? (
         <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
@@ -31,14 +29,14 @@ const intro =
                     <img
                       class="aspect-[16/10] w-full max-w-2xl object-cover"
                       src={urlFor(post.mainImage).width(800).height(500).url()}
-                      alt={post.mainImage.alt || post.title || "Travel image"}
+                      alt={post.mainImage?.alt ?? "---"}
                     />
                   </figure>
                 ) : null}
                 <header class="space-y-1">
                   <h2>
-                    <a href={`/posts/${post.slug.current}`}>
-                      {post.title || "Untitled travel post"}
+                    <a href={getPostPath(post.slug.current, post.category)}>
+                      {post.title ?? "---"}
                     </a>
                   </h2>
                   <p>

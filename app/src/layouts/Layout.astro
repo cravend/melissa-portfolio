@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import { getSiteSettings } from "../utils/sanity";
+import { NAV_ITEMS } from "../utils/routes";
 import "../styles/global.css";
 
 interface Props {
@@ -9,17 +10,9 @@ interface Props {
 
 const { title } = Astro.props;
 const siteSettings = await getSiteSettings();
-const brandName =
-  siteSettings?.brandName || siteSettings?.siteTitle || "Melissa Craven";
-const footerText = siteSettings?.footerText || "\u00A9 2026 Melissa Craven";
+const brandName = siteSettings?.brandName ?? siteSettings?.siteTitle ?? "---";
+const footerText = siteSettings?.footerText ?? "---";
 const pathname = Astro.url.pathname;
-const navItems = [
-  { href: "/travel", label: "Travel" },
-  { href: "/fulbright", label: "Fulbright" },
-  { href: "/kids-corner", label: "Kids' Corner" },
-  { href: "/author", label: "Author" },
-  { href: "/contact", label: "Contact" },
-];
 
 const isActive = (href: string) =>
   pathname === href || pathname.startsWith(`${href}/`);
@@ -51,7 +44,7 @@ const isActive = (href: string) =>
               class="flex flex-wrap items-center gap-x-1 gap-y-1 space-y-0 sm:justify-end"
             >
               {
-                navItems.map((item) => (
+                NAV_ITEMS.map((item) => (
                   <li>
                     <a
                       class:list={[
