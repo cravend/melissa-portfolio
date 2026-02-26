@@ -104,14 +104,29 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     groq`*[_type == "siteSettings"][0]{
       siteTitle,
       bio,
-      headshot
+      headshot,
+      brandName,
+      footerText
+    }`
+  );
+}
+
+export async function getPageCopy(): Promise<PageCopy | null> {
+  return await sanityClient.fetch(
+    groq`*[_type == "pageCopy"][0]{
+      home,
+      travel,
+      fulbright,
+      kidsCorner,
+      author,
+      contact
     }`
   );
 }
 
 export async function getBooks(): Promise<Book[]> {
   return await sanityClient.fetch(
-    groq`*[_type == "book"] | order(status == "published" desc, title asc){
+    groq`*[_type == "book"] | order(select(status == "published" => 0, status == "upcoming" => 1, 2) asc, title asc){
       title,
       coverImage,
       description,
@@ -153,6 +168,38 @@ export interface SiteSettings {
   siteTitle?: string;
   bio?: string;
   headshot?: ImageAsset & { alt?: string };
+  brandName?: string;
+  footerText?: string;
+}
+
+export interface PageCopy {
+  home?: HomePageCopy;
+  travel?: BasicPageCopy;
+  fulbright?: FulbrightPageCopy;
+  kidsCorner?: KidsCornerPageCopy;
+  author?: BasicPageCopy;
+  contact?: BasicPageCopy;
+}
+
+export interface BasicPageCopy {
+  intro?: string;
+}
+
+export interface HomePageCopy {
+  travelDescription?: string;
+  fulbrightDescription?: string;
+  kidsDescription?: string;
+  authorDescription?: string;
+  contactDescription?: string;
+}
+
+export interface FulbrightPageCopy extends BasicPageCopy {
+  resourcesDescription?: string;
+  esolDescription?: string;
+}
+
+export interface KidsCornerPageCopy extends BasicPageCopy {
+  pollsSectionDescription?: string;
 }
 
 export interface Tour {

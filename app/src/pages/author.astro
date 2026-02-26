@@ -1,15 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { urlFor } from "../utils/image";
-import { getBooks } from "../utils/sanity";
+import { getBooks, getPageCopy } from "../utils/sanity";
 
-const books = await getBooks();
+const [books, pageCopy] = await Promise.all([getBooks(), getPageCopy()]);
+const authorCopy = pageCopy?.author;
+const intro =
+  authorCopy?.intro || "Browse Melissa Craven's current and upcoming books.";
 ---
 
 <Layout title="Author">
   <section>
     <h1>Author</h1>
-    <p>Browse Melissa Craven's current and upcoming books.</p>
+    <p>{intro}</p>
     {
       books.length ? (
         <ul>

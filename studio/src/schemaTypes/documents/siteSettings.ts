@@ -12,6 +12,18 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'brandName',
+      title: 'Brand Name',
+      type: 'string',
+      description: 'Displayed in the header brand link.',
+    }),
+    defineField({
+      name: 'footerText',
+      title: 'Footer Text',
+      type: 'string',
+      description: 'Displayed in the site footer.',
+    }),
+    defineField({
       name: 'bio',
       title: 'Bio',
       type: 'text',

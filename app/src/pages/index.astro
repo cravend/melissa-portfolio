@@ -1,14 +1,33 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { urlFor } from "../utils/image";
-import { getSiteSettings } from "../utils/sanity";
+import { getPageCopy, getSiteSettings } from "../utils/sanity";
 
-const siteSettings = await getSiteSettings();
+const [siteSettings, pageCopy] = await Promise.all([
+  getSiteSettings(),
+  getPageCopy(),
+]);
+const homeCopy = pageCopy?.home;
 const siteTitle = siteSettings?.siteTitle || "Melissa Craven";
 const bio =
   siteSettings?.bio ||
   "Melissa Craven shares travel writing, Fulbright teaching resources, stories for kids, and updates about her author work.";
 const headshot = siteSettings?.headshot;
+const travelDescription =
+  homeCopy?.travelDescription ||
+  "Stories, reflections, and updates from Melissa's travels.";
+const fulbrightDescription =
+  homeCopy?.fulbrightDescription ||
+  "Updates from Fulbright work, plus resources and ESOL teaching tools.";
+const kidsDescription =
+  homeCopy?.kidsDescription ||
+  "Activities, polls, and educational tours designed for young learners.";
+const authorDescription =
+  homeCopy?.authorDescription ||
+  "Book news, release updates, and writing-related announcements.";
+const contactDescription =
+  homeCopy?.contactDescription ||
+  "Reach out for collaborations, classroom connections, or speaking.";
 ---
 
 <Layout title={siteTitle}>
@@ -35,15 +54,13 @@ const headshot = siteSettings?.headshot;
 
     <section aria-labelledby="travel-preview-heading">
       <h3 id="travel-preview-heading">Travel</h3>
-      <p>Stories, reflections, and updates from Melissa's travels.</p>
+      <p>{travelDescription}</p>
       <p><a href="/travel">Visit Travel</a></p>
     </section>
 
     <section aria-labelledby="fulbright-preview-heading">
       <h3 id="fulbright-preview-heading">Fulbright</h3>
-      <p>
-        Updates from Fulbright work, plus resources and ESOL teaching tools.
-      </p>
+      <p>{fulbrightDescription}</p>
       <nav aria-label="Fulbright preview links">
         <ul>
           <li><a href="/fulbright">Fulbright Updates</a></li>
@@ -55,9 +72,7 @@ const headshot = siteSettings?.headshot;
 
     <section aria-labelledby="kids-preview-heading">
       <h3 id="kids-preview-heading">Kids' Corner</h3>
-      <p>
-        Activities, polls, and educational tours designed for young learners.
-      </p>
+      <p>{kidsDescription}</p>
       <nav aria-label="Kids' Corner preview links">
         <ul>
           <li><a href="/kids-corner">Kids' Corner Home</a></li>
@@ -69,13 +84,13 @@ const headshot = siteSettings?.headshot;
 
     <section aria-labelledby="author-preview-heading">
       <h3 id="author-preview-heading">Author</h3>
-      <p>Book news, release updates, and writing-related announcements.</p>
+      <p>{authorDescription}</p>
       <p><a href="/author">Visit Author</a></p>
     </section>
 
     <section aria-labelledby="contact-preview-heading">
       <h3 id="contact-preview-heading">Contact</h3>
-      <p>Reach out for collaborations, classroom connections, or speaking.</p>
+      <p>{contactDescription}</p>
       <p><a href="/contact">Visit Contact</a></p>
     </section>
   </section>

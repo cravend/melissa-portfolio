@@ -1,16 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getActivePoll, getLatestTour } from "../utils/sanity";
+import { getActivePoll, getLatestTour, getPageCopy } from "../utils/sanity";
 
-const [activePoll, latestTour] = await Promise.all([
+const [activePoll, latestTour, pageCopy] = await Promise.all([
   getActivePoll(),
   getLatestTour(),
+  getPageCopy(),
 ]);
+const kidsCopy = pageCopy?.kidsCorner;
+const intro =
+  kidsCopy?.intro ||
+  "Explore weekly questions, classroom-friendly polls, and student tours.";
+const pollsSectionDescription =
+  kidsCopy?.pollsSectionDescription ||
+  "Share your answer and compare ideas with other kids.";
 ---
 
 <Layout title="Kids' Corner">
   <h1>Kids' Corner</h1>
-  <p>Explore weekly questions, classroom-friendly polls, and student tours.</p>
+  <p>{intro}</p>
 
   <nav aria-label="Kids' Corner sections">
     <ul>
@@ -58,7 +66,7 @@ const [activePoll, latestTour] = await Promise.all([
 
   <section aria-labelledby="poll-teaser-heading">
     <h2 id="poll-teaser-heading">Polls</h2>
-    <p>Share your answer and compare ideas with other kids.</p>
+    <p>{pollsSectionDescription}</p>
     {
       activePoll?.options?.length ? (
         <article>

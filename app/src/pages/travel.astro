@@ -2,15 +2,22 @@
 import Layout from "../layouts/Layout.astro";
 import { formatDate } from "../utils";
 import { urlFor } from "../utils/image";
-import { getTravelPosts } from "../utils/sanity";
+import { getPageCopy, getTravelPosts } from "../utils/sanity";
 
-const travelPosts = await getTravelPosts();
+const [travelPosts, pageCopy] = await Promise.all([
+  getTravelPosts(),
+  getPageCopy(),
+]);
+const travelCopy = pageCopy?.travel;
+const intro =
+  travelCopy?.intro ||
+  "Stories, reflections, and practical notes from the road.";
 ---
 
 <Layout title="Travel">
   <section>
     <h1>Travel</h1>
-    <p>Stories, reflections, and practical notes from the road.</p>
+    <p>{intro}</p>
     {
       travelPosts.length ? (
         <ul>

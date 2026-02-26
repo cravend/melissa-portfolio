@@ -1,11 +1,16 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { getSiteSettings } from "../utils/sanity";
 
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const siteSettings = await getSiteSettings();
+const brandName =
+  siteSettings?.brandName || siteSettings?.siteTitle || "Melissa Craven";
+const footerText = siteSettings?.footerText || "\u00A9 2026 Melissa Craven";
 ---
 
 <!doctype html>
@@ -20,7 +25,7 @@ const { title } = Astro.props;
   </head>
   <body>
     <header>
-      <p><a href="/">Melissa Craven</a></p>
+      <p><a href="/">{brandName}</a></p>
       <nav aria-label="Main">
         <ul>
           <li><a href="/travel">Travel</a></li>
@@ -49,7 +54,7 @@ const { title } = Astro.props;
       <slot />
     </main>
     <footer>
-      <p>&copy; 2026 Melissa Craven</p>
+      <p>{footerText}</p>
     </footer>
   </body>
 </html>

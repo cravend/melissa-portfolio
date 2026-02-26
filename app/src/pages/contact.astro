@@ -1,19 +1,23 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getPageCopy } from "../utils/sanity";
+
+const pageCopy = await getPageCopy();
+const contactCopy = pageCopy?.contact;
+const intro =
+  contactCopy?.intro ||
+  "I am happy to connect about travel writing, Fulbright and ESOL resources, or author events.";
 ---
 
-<Layout title="Contact Melissa Craven">
+<Layout title="Contact">
   <h1>Contact</h1>
 
   <section>
     <h2>Get in touch</h2>
-    <p>
-      I am happy to connect about travel writing, Fulbright and ESOL resources,
-      or author events.
-    </p>
+    <p>{intro}</p>
     <address>
       <p><a href="mailto:pro@melissacraven.me">pro@melissacraven.me</a></p>
-      <p><a href="tel:+447915824236">+44 7915 824236</a></p>
+      <p><a href="tel:+447915824236">+447915824236</a></p>
       <p>
         <a href="https://www.linkedin.com/in/melissa-craven-fb2526/">LinkedIn</a
         >

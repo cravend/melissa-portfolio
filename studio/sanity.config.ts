@@ -3,13 +3,13 @@ import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './src/schemaTypes'
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-projectID'
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || ''
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const configuredTypes = ['post', 'resource', 'tour', 'poll', 'book', 'siteSettings']
 
 export default defineConfig({
-  name: 'sanity-template-astro-clean',
-  title: 'Sanity Astro Starter',
+  name: 'melissa-craven-portfolio',
+  title: "Melissa's Portfolio",
   projectId,
   dataset,
   plugins: [
@@ -117,8 +117,6 @@ export default defineConfig({
                   ]),
               ),
             S.divider(),
-            S.documentTypeListItem('post').title('All Posts'),
-            S.documentTypeListItem('resource').title('All Resources'),
             ...S.documentTypeListItems().filter(
               (listItem) => !configuredTypes.includes(listItem.getId() || ''),
             ),

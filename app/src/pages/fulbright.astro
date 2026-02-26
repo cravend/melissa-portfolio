@@ -2,22 +2,33 @@
 import Layout from "../layouts/Layout.astro";
 import { formatDate } from "../utils";
 import {
+  getPageCopy,
   getEsolResources,
   getFulbrightPosts,
   getFulbrightPrepResources,
 } from "../utils/sanity";
 
-const updates = await getFulbrightPosts();
-const prepResources = await getFulbrightPrepResources();
-const esolResources = await getEsolResources();
+const [updates, prepResources, esolResources, pageCopy] = await Promise.all([
+  getFulbrightPosts(),
+  getFulbrightPrepResources(),
+  getEsolResources(),
+  getPageCopy(),
+]);
+const fulbrightCopy = pageCopy?.fulbright;
+const intro =
+  fulbrightCopy?.intro ||
+  "Follow Fulbright updates, explore preparation materials, and browse ESOL teaching tools.";
+const resourcesDescription =
+  fulbrightCopy?.resourcesDescription ||
+  "Preparation materials and supporting documents for Fulbright work.";
+const esolDescription =
+  fulbrightCopy?.esolDescription ||
+  "Classroom tools and lesson support resources for ESOL instruction.";
 ---
 
 <Layout title="Fulbright">
   <h1>Fulbright</h1>
-  <p>
-    Follow Fulbright updates, explore preparation materials, and browse ESOL
-    teaching tools.
-  </p>
+  <p>{intro}</p>
 
   <nav aria-label="Fulbright sections">
     <ul>
@@ -59,7 +70,7 @@ const esolResources = await getEsolResources();
 
   <section aria-labelledby="fulbright-resources-heading">
     <h2 id="fulbright-resources-heading">Resources</h2>
-    <p>Preparation materials and supporting documents for Fulbright work.</p>
+    <p>{resourcesDescription}</p>
     <p>
       <a href="/fulbright/resources">View all Fulbright resources</a>
     </p>
@@ -68,7 +79,7 @@ const esolResources = await getEsolResources();
 
   <section aria-labelledby="fulbright-esol-heading">
     <h2 id="fulbright-esol-heading">ESOL Tools</h2>
-    <p>Classroom tools and lesson support resources for ESOL instruction.</p>
+    <p>{esolDescription}</p>
     <p>
       <a href="/fulbright/esol">View all ESOL tools</a>
     </p>
