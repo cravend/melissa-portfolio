@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import {
   getActivePoll,
@@ -12,16 +13,21 @@ const [activePoll, latestTour, kidsCornerPage] = await Promise.all([
   getLatestTour(),
   getKidsCornerPage(),
 ]);
-const intro = kidsCornerPage?.intro ?? "---";
-const pollsSectionDescription =
-  kidsCornerPage?.pollsSectionDescription ?? "---";
+const intro = kidsCornerPage?.intro;
+const pollsSectionDescription = kidsCornerPage?.pollsSectionDescription;
 ---
 
 <Layout title="Kids' Corner">
   <section class="space-y-2">
     <h1>Kids' Corner</h1>
     <Breadcrumb />
-    <p>{intro}</p>
+    {
+      intro?.length ? (
+        <div class="prose-content">
+          <PortableText value={intro} />
+        </div>
+      ) : null
+    }
     <p>
       <a href="/kids-corner/polls">Polls</a> ·{" "}
       <a href="/kids-corner/tours">Tours</a>
@@ -76,7 +82,13 @@ const pollsSectionDescription =
     aria-labelledby="poll-teaser-heading"
   >
     <h2 id="poll-teaser-heading">Polls</h2>
-    <p>{pollsSectionDescription}</p>
+    {
+      pollsSectionDescription?.length ? (
+        <div class="prose-content">
+          <PortableText value={pollsSectionDescription} />
+        </div>
+      ) : null
+    }
     {
       activePoll?.options?.length ? (
         <article class="space-y-2">

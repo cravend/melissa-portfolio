@@ -1,5 +1,6 @@
 ---
 import { PortableText } from "astro-portabletext";
+import PortableTextImage from "./PortableTextImage.astro";
 import type { Resource } from "../utils/sanity";
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 }
 
 const { resources, emptyMessage } = Astro.props;
+
+const portableTextComponents = { type: { image: PortableTextImage } };
 ---
 
 {
@@ -22,7 +25,10 @@ const { resources, emptyMessage } = Astro.props;
               {resource.description ? <p>{resource.description}</p> : null}
               {resource.body ? (
                 <div class="prose-content">
-                  <PortableText value={resource.body} />
+                  <PortableText
+                    value={resource.body}
+                    components={portableTextComponents}
+                  />
                 </div>
               ) : null}
               {resource.downloads?.length ? (

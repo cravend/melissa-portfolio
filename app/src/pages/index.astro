@@ -1,18 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
 import { urlFor } from "../utils/image";
 import { getSiteSettings } from "../utils/sanity";
 
 const siteSettings = await getSiteSettings();
 const homeCopy = siteSettings?.home;
 const siteTitle = siteSettings?.siteTitle ?? "---";
-const bio = siteSettings?.bio ?? "---";
+const bio = siteSettings?.bio;
 const headshot = siteSettings?.headshot;
-const travelDescription = homeCopy?.travelDescription ?? "---";
-const fulbrightDescription = homeCopy?.fulbrightDescription ?? "---";
-const kidsDescription = homeCopy?.kidsDescription ?? "---";
-const authorDescription = homeCopy?.authorDescription ?? "---";
-const contactDescription = homeCopy?.contactDescription ?? "---";
+const travelDescription = homeCopy?.travelDescription;
+const fulbrightDescription = homeCopy?.fulbrightDescription;
+const kidsDescription = homeCopy?.kidsDescription;
+const authorDescription = homeCopy?.authorDescription;
+const contactDescription = homeCopy?.contactDescription;
 ---
 
 <Layout title={siteTitle}>
@@ -34,13 +35,8 @@ const contactDescription = homeCopy?.contactDescription ?? "---";
           <div />
         )
       }
-      <div class="space-y-2">
-        {
-          bio
-            .split(/\n\n+/)
-            .filter(Boolean)
-            .map((para) => <p>{para.trim()}</p>)
-        }
+      <div class="space-y-2 prose-content">
+        {bio?.length ? <PortableText value={bio} /> : null}
       </div>
     </div>
   </section>
@@ -50,7 +46,13 @@ const contactDescription = homeCopy?.contactDescription ?? "---";
     <div class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
       <section class="space-y-2 py-5" aria-labelledby="travel-preview-heading">
         <h3 id="travel-preview-heading">Travel</h3>
-        <p>{travelDescription}</p>
+        {
+          travelDescription?.length ? (
+            <div class="prose-content">
+              <PortableText value={travelDescription} />
+            </div>
+          ) : null
+        }
         <p>
           <a class="font-semibold no-underline" href="/travel">Visit Travel</a>
         </p>
@@ -61,7 +63,13 @@ const contactDescription = homeCopy?.contactDescription ?? "---";
         aria-labelledby="fulbright-preview-heading"
       >
         <h3 id="fulbright-preview-heading">Fulbright</h3>
-        <p>{fulbrightDescription}</p>
+        {
+          fulbrightDescription?.length ? (
+            <div class="prose-content">
+              <PortableText value={fulbrightDescription} />
+            </div>
+          ) : null
+        }
         <p>
           <a href="/fulbright">Updates</a> ·{" "}
           <a href="/fulbright/resources">Resources</a> ·{" "}
@@ -71,7 +79,13 @@ const contactDescription = homeCopy?.contactDescription ?? "---";
 
       <section class="space-y-2 py-5" aria-labelledby="kids-preview-heading">
         <h3 id="kids-preview-heading">Kids' Corner</h3>
-        <p>{kidsDescription}</p>
+        {
+          kidsDescription?.length ? (
+            <div class="prose-content">
+              <PortableText value={kidsDescription} />
+            </div>
+          ) : null
+        }
         <p>
           <a href="/kids-corner">Home</a> · <a href="/kids-corner/polls"
             >Polls</a
@@ -82,7 +96,13 @@ const contactDescription = homeCopy?.contactDescription ?? "---";
 
       <section class="space-y-2 py-5" aria-labelledby="author-preview-heading">
         <h3 id="author-preview-heading">Author</h3>
-        <p>{authorDescription}</p>
+        {
+          authorDescription?.length ? (
+            <div class="prose-content">
+              <PortableText value={authorDescription} />
+            </div>
+          ) : null
+        }
         <p>
           <a class="font-semibold no-underline" href="/author">Visit Author</a>
         </p>
@@ -90,7 +110,13 @@ const contactDescription = homeCopy?.contactDescription ?? "---";
 
       <section class="space-y-2 py-5" aria-labelledby="contact-preview-heading">
         <h3 id="contact-preview-heading">Contact</h3>
-        <p>{contactDescription}</p>
+        {
+          contactDescription?.length ? (
+            <div class="prose-content">
+              <PortableText value={contactDescription} />
+            </div>
+          ) : null
+        }
         <p>
           <a class="font-semibold no-underline" href="/contact">Visit Contact</a
           >

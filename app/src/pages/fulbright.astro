@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { formatDate } from "../utils";
 import {
@@ -16,16 +17,22 @@ const [updates, prepResources, esolResources, fulbrightPage] =
     getResourcesByCategory("esol"),
     getFulbrightPage(),
   ]);
-const intro = fulbrightPage?.intro ?? "---";
-const resourcesDescription = fulbrightPage?.resourcesDescription ?? "---";
-const esolDescription = fulbrightPage?.esolDescription ?? "---";
+const intro = fulbrightPage?.intro;
+const resourcesDescription = fulbrightPage?.resourcesDescription;
+const esolDescription = fulbrightPage?.esolDescription;
 ---
 
 <Layout title="Fulbright">
   <section class="space-y-2">
     <h1>Fulbright</h1>
     <Breadcrumb />
-    <p>{intro}</p>
+    {
+      intro?.length ? (
+        <div class="prose-content">
+          <PortableText value={intro} />
+        </div>
+      ) : null
+    }
     <p>
       <a href="/fulbright/resources">Resources</a> ·{" "}
       <a href="/fulbright/esol">ESOL Tools</a>
@@ -68,7 +75,13 @@ const esolDescription = fulbrightPage?.esolDescription ?? "---";
     aria-labelledby="fulbright-resources-heading"
   >
     <h2 id="fulbright-resources-heading">Resources</h2>
-    <p>{resourcesDescription}</p>
+    {
+      resourcesDescription?.length ? (
+        <div class="prose-content">
+          <PortableText value={resourcesDescription} />
+        </div>
+      ) : null
+    }
     <p>
       <a href="/fulbright/resources">View all Fulbright resources</a>
     </p>
@@ -80,7 +93,13 @@ const esolDescription = fulbrightPage?.esolDescription ?? "---";
     aria-labelledby="fulbright-esol-heading"
   >
     <h2 id="fulbright-esol-heading">ESOL Tools</h2>
-    <p>{esolDescription}</p>
+    {
+      esolDescription?.length ? (
+        <div class="prose-content">
+          <PortableText value={esolDescription} />
+        </div>
+      ) : null
+    }
     <p>
       <a href="/fulbright/esol">View all ESOL tools</a>
     </p>

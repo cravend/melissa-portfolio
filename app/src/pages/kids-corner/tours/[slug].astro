@@ -2,8 +2,11 @@
 import { PortableText } from "astro-portabletext";
 import Layout from "../../../layouts/Layout.astro";
 import Breadcrumb from "../../../components/Breadcrumb.astro";
+import PortableTextImage from "../../../components/PortableTextImage.astro";
 import { urlFor } from "../../../utils/image";
 import { getTour, getTours } from "../../../utils/sanity";
+
+const portableTextComponents = { type: { image: PortableTextImage } };
 
 export async function getStaticPaths() {
   const tours = await getTours();
@@ -62,7 +65,7 @@ const tour = await getTour(slug);
       tour.body?.length ? (
         <section class="prose-content" aria-labelledby="tour-story-heading">
           <h2 id="tour-story-heading">Tour Story</h2>
-          <PortableText value={tour.body} />
+          <PortableText value={tour.body} components={portableTextComponents} />
         </section>
       ) : null
     }

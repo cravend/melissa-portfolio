@@ -1,6 +1,7 @@
 ---
 import { PortableText } from "astro-portabletext";
 import Breadcrumb from "./Breadcrumb.astro";
+import PortableTextImage from "./PortableTextImage.astro";
 import { formatDate } from "../utils";
 import { urlFor } from "../utils/image";
 import type { Post } from "../utils/sanity";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const { post, parentHref, parentLabel } = Astro.props;
+
+const portableTextComponents = { type: { image: PortableTextImage } };
 const resolvedTitle = post.title ?? "---";
 ---
 
@@ -42,6 +45,6 @@ const resolvedTitle = post.title ?? "---";
     ) : null
   }
   <section class="prose-content">
-    <PortableText value={post.body} />
+    <PortableText value={post.body} components={portableTextComponents} />
   </section>
 </article>

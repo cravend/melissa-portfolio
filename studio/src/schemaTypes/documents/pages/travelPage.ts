@@ -8,9 +8,7 @@ export default defineType({
     defineField({
       name: 'intro',
       title: 'Intro',
-      type: 'text',
-      rows: 4,
-      initialValue: 'Stories, reflections, and practical notes from the road.',
+      type: 'simpleBlockContent',
     }),
   ],
   preview: {

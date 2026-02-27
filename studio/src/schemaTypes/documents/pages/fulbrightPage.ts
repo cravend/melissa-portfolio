@@ -8,26 +8,17 @@ export default defineType({
     defineField({
       name: 'intro',
       title: 'Intro',
-      type: 'text',
-      rows: 3,
-      initialValue:
-        'Follow Fulbright updates, explore preparation materials, and browse ESOL teaching tools.',
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'resourcesDescription',
       title: 'Resources Description',
-      type: 'text',
-      rows: 3,
-      initialValue:
-        'Preparation materials and supporting documents for Fulbright work.',
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'esolDescription',
       title: 'ESOL Description',
-      type: 'text',
-      rows: 3,
-      initialValue:
-        'Classroom tools and lesson support resources for ESOL instruction.',
+      type: 'simpleBlockContent',
     }),
   ],
   preview: {

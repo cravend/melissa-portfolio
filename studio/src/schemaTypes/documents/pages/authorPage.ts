@@ -8,9 +8,7 @@ export default defineType({
     defineField({
       name: 'intro',
       title: 'Intro',
-      type: 'text',
-      rows: 3,
-      initialValue: "Browse Melissa Craven's current and upcoming books.",
+      type: 'simpleBlockContent',
     }),
   ],
   preview: {

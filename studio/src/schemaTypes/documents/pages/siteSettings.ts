@@ -29,10 +29,7 @@ export default defineType({
     defineField({
       name: 'bio',
       title: 'Bio',
-      type: 'text',
-      rows: 5,
-      initialValue:
-        "Melissa Craven shares travel writing, Fulbright teaching resources, stories for kids, and updates about her author work.",
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'headshot',
@@ -54,28 +51,16 @@ export default defineType({
       name: 'home',
       title: 'Home Page',
       type: 'object',
-      initialValue: {
-        travelDescription: "Stories, reflections, and updates from Melissa's travels.",
-        fulbrightDescription:
-          "Updates from Fulbright work, plus resources and ESOL teaching tools.",
-        kidsDescription:
-          "Activities, polls, and educational tours designed for young learners.",
-        authorDescription:
-          "Book news, release updates, and writing-related announcements.",
-        contactDescription:
-          "Reach out for collaborations, classroom connections, or speaking.",
-      },
       fields: [
-        defineField({ name: 'travelDescription', title: 'Travel Description', type: 'text', rows: 3 }),
+        defineField({ name: 'travelDescription', title: 'Travel Description', type: 'simpleBlockContent' }),
         defineField({
           name: 'fulbrightDescription',
           title: 'Fulbright Description',
-          type: 'text',
-          rows: 3,
+          type: 'simpleBlockContent',
         }),
-        defineField({ name: 'kidsDescription', title: "Kids' Corner Description", type: 'text', rows: 3 }),
-        defineField({ name: 'authorDescription', title: 'Author Description', type: 'text', rows: 3 }),
-        defineField({ name: 'contactDescription', title: 'Contact Description', type: 'text', rows: 3 }),
+        defineField({ name: 'kidsDescription', title: "Kids' Corner Description", type: 'simpleBlockContent' }),
+        defineField({ name: 'authorDescription', title: 'Author Description', type: 'simpleBlockContent' }),
+        defineField({ name: 'contactDescription', title: 'Contact Description', type: 'simpleBlockContent' }),
       ],
     }),
   ],

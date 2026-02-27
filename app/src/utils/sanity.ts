@@ -172,7 +172,7 @@ export interface Resource {
 
 export interface SiteSettings {
   siteTitle?: string;
-  bio?: string;
+  bio?: PortableTextBlock[];
   headshot?: ImageAsset & { alt?: string };
   brandName?: string;
   footerText?: string;
@@ -180,30 +180,30 @@ export interface SiteSettings {
 }
 
 export interface TravelPageCopy {
-  intro?: string;
+  intro?: PortableTextBlock[];
 }
 
 export interface BasicPageCopy {
-  intro?: string;
+  intro?: PortableTextBlock[];
 }
 
 export interface HomePageCopy {
-  travelDescription?: string;
-  fulbrightDescription?: string;
-  kidsDescription?: string;
-  authorDescription?: string;
-  contactDescription?: string;
+  travelDescription?: PortableTextBlock[];
+  fulbrightDescription?: PortableTextBlock[];
+  kidsDescription?: PortableTextBlock[];
+  authorDescription?: PortableTextBlock[];
+  contactDescription?: PortableTextBlock[];
 }
 
 export interface FulbrightPageCopy {
-  intro?: string;
-  resourcesDescription?: string;
-  esolDescription?: string;
+  intro?: PortableTextBlock[];
+  resourcesDescription?: PortableTextBlock[];
+  esolDescription?: PortableTextBlock[];
 }
 
 export interface KidsCornerPageCopy {
-  intro?: string;
-  pollsSectionDescription?: string;
+  intro?: PortableTextBlock[];
+  pollsSectionDescription?: PortableTextBlock[];
 }
 
 export interface ContactLink {
@@ -212,7 +212,7 @@ export interface ContactLink {
 }
 
 export interface ContactPageCopy {
-  intro?: string;
+  intro?: PortableTextBlock[];
   contactLinks?: ContactLink[];
 }
 

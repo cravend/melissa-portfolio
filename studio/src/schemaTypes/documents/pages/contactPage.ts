@@ -8,10 +8,7 @@ export default defineType({
     defineField({
       name: 'intro',
       title: 'Intro',
-      type: 'text',
-      rows: 3,
-      initialValue:
-        'I am happy to connect about travel writing, Fulbright and ESOL resources, or author events.',
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'contactLinks',

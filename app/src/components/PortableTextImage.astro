@@ -1,0 +1,26 @@
+---
+import type { Image } from "@sanity/types";
+import { urlFor } from "../utils/image";
+
+interface Props {
+  node: { asset?: { _ref: string }; alt?: string };
+}
+
+const { node } = Astro.props;
+const asset = node?.asset;
+const alt = node?.alt ?? "";
+---
+
+{
+  asset ? (
+    <figure class="my-4">
+      <img
+        class="w-full rounded-lg object-cover"
+        src={urlFor(node as Image)
+          .width(1200)
+          .url()}
+        alt={alt}
+      />
+    </figure>
+  ) : null
+}

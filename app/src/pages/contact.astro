@@ -1,10 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { getContactPage } from "../utils/sanity";
 
 const contactPage = await getContactPage();
-const intro = contactPage?.intro ?? "---";
+const intro = contactPage?.intro;
 const contactLinks = contactPage?.contactLinks ?? [];
 ---
 
@@ -15,7 +16,13 @@ const contactLinks = contactPage?.contactLinks ?? [];
   </section>
 
   <section class="space-y-4">
-    <p>{intro}</p>
+    {
+      intro?.length ? (
+        <div class="prose-content">
+          <PortableText value={intro} />
+        </div>
+      ) : null
+    }
     <address class="space-y-2">
       <ul>
         {

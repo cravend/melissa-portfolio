@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { formatDate } from "../utils";
 import { urlFor } from "../utils/image";
@@ -10,14 +11,20 @@ const [travelPosts, travelPage] = await Promise.all([
   getPostsByCategory("travel"),
   getTravelPage(),
 ]);
-const intro = travelPage?.intro ?? "---";
+const intro = travelPage?.intro;
 ---
 
 <Layout title="Travel">
   <section class="space-y-2">
     <h1>Travel</h1>
     <Breadcrumb />
-    <p>{intro}</p>
+    {
+      intro?.length ? (
+        <div class="prose-content">
+          <PortableText value={intro} />
+        </div>
+      ) : null
+    }
     {
       travelPosts.length ? (
         <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">

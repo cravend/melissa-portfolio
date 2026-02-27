@@ -8,17 +8,12 @@ export default defineType({
     defineField({
       name: 'intro',
       title: 'Intro',
-      type: 'text',
-      rows: 3,
-      initialValue:
-        'Explore weekly questions, classroom-friendly polls, and student tours.',
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'pollsSectionDescription',
       title: 'Polls Section Description',
-      type: 'text',
-      rows: 3,
-      initialValue: 'Share your answer and compare ideas with other kids.',
+      type: 'simpleBlockContent',
     }),
   ],
   preview: {

@@ -1,18 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { urlFor } from "../utils/image";
 import { getBooks, getAuthorPage } from "../utils/sanity";
 
 const [books, authorPage] = await Promise.all([getBooks(), getAuthorPage()]);
-const intro = authorPage?.intro ?? "---";
+const intro = authorPage?.intro;
 ---
 
 <Layout title="Author">
   <section class="space-y-2">
     <h1>Author</h1>
     <Breadcrumb />
-    <p>{intro}</p>
+    {
+      intro?.length ? (
+        <div class="prose-content">
+          <PortableText value={intro} />
+        </div>
+      ) : null
+    }
     {
       books.length ? (
         <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
