@@ -52,6 +52,12 @@ export default defineType({
       title: 'Home Page',
       type: 'object',
       fields: [
+        defineField({
+          name: 'headline',
+          title: 'Headline',
+          type: 'string',
+          initialValue: 'Writing, Teaching, and Storytelling',
+        }),
         defineField({ name: 'travelDescription', title: 'Travel Description', type: 'simpleBlockContent' }),
         defineField({
           name: 'fulbrightDescription',

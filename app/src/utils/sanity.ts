@@ -188,6 +188,7 @@ export interface BasicPageCopy {
 }
 
 export interface HomePageCopy {
+  headline?: string;
   travelDescription?: PortableTextBlock[];
   fulbrightDescription?: PortableTextBlock[];
   kidsDescription?: PortableTextBlock[];

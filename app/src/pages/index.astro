@@ -9,6 +9,7 @@ const homeCopy = siteSettings?.home;
 const siteTitle = siteSettings?.siteTitle ?? "---";
 const bio = siteSettings?.bio;
 const headshot = siteSettings?.headshot;
+const headline = homeCopy?.headline ?? "Writing, Teaching, and Storytelling";
 const travelDescription = homeCopy?.travelDescription;
 const fulbrightDescription = homeCopy?.fulbrightDescription;
 const kidsDescription = homeCopy?.kidsDescription;
@@ -20,7 +21,7 @@ const contactDescription = homeCopy?.contactDescription;
   <section
     class="space-y-6 border-b border-orange-200/70 pb-8 dark:border-brand-900/60"
   >
-    <h1>Writing, Teaching, and Storytelling</h1>
+    <h1>{headline}</h1>
     <div class="grid gap-6 md:grid-cols-[220px_1fr]">
       {
         headshot?.asset ? (
