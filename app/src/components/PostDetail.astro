@@ -37,7 +37,7 @@ const resolvedTitle = post.title ?? "---";
     post.mainImage ? (
       <figure>
         <img
-          class="w-full object-cover"
+          class="mx-auto max-h-[480px] w-auto"
           src={urlFor(post.mainImage).url()}
           alt={post.mainImage?.alt ?? "---"}
         />

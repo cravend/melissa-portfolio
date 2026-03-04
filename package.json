@@ -23,7 +23,9 @@
     "app"
   ],
   "devDependencies": {
-    "@types/node": "^25.3.1"
+    "@types/node": "^25.3.1",
+    "@sanity/blueprints": "0.12.2",
+    "@sanity/functions": "1.2.0"
   },
   "type": "module"
 }
