@@ -1,128 +1,176 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PostCard from "../components/PostCard.astro";
 import { PortableText } from "astro-portabletext";
 import { urlFor } from "../utils/image";
-import { getSiteSettings } from "../utils/sanity";
+import { getPostPath } from "../utils/routes";
+import {
+  getSiteSettings,
+  getPosts,
+  getLatestPostByCategory,
+} from "../utils/sanity";
 
-const siteSettings = await getSiteSettings();
+const [siteSettings, allPosts, latestTour] = await Promise.all([
+  getSiteSettings(),
+  getPosts(),
+  getLatestPostByCategory("kids-corner/tours"),
+]);
+
 const homeCopy = siteSettings?.home;
 const siteTitle = siteSettings?.siteTitle ?? "---";
 const bio = siteSettings?.bio;
 const headshot = siteSettings?.headshot;
 const headline = homeCopy?.headline ?? "Writing, Teaching, and Storytelling";
-const travelDescription = homeCopy?.travelDescription;
-const fulbrightDescription = homeCopy?.fulbrightDescription;
-const kidsDescription = homeCopy?.kidsDescription;
-const authorDescription = homeCopy?.authorDescription;
-const contactDescription = homeCopy?.contactDescription;
+
+const recentPosts = allPosts
+  .filter((p) => p.category === "fulbright" || p.category === "travel")
+  .slice(0, 4);
+const featuredPost = recentPosts[0];
+const morePosts = recentPosts.slice(1);
 ---
 
 <Layout title={siteTitle}>
-  <section
-    class="space-y-6 border-b border-orange-200/70 pb-8 dark:border-brand-900/60"
-  >
-    <h1>{headline}</h1>
-    <div class="grid gap-6 md:grid-cols-[220px_1fr]">
+  <section class="relative space-y-6 pb-10">
+    <div class="grid items-center gap-8 md:grid-cols-[280px_1fr]">
       {
         headshot?.asset ? (
           <figure>
             <img
-              class="aspect-square w-full object-cover"
-              src={urlFor(headshot).width(720).url()}
+              class="aspect-square w-full object-cover shadow-lg"
+              src={urlFor(headshot).width(560).url()}
               alt={headshot.alt}
             />
           </figure>
-        ) : (
-          <div />
-        )
+        ) : null
       }
-      <div class="space-y-2 prose-content">
-        {bio?.length ? <PortableText value={bio} /> : null}
+      <div class="space-y-4">
+        <h1>{headline}</h1>
+        {
+          bio?.length ? (
+            <div class="prose-content max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+              <PortableText value={bio} />
+            </div>
+          ) : null
+        }
       </div>
     </div>
   </section>
 
-  <section class="space-y-4" aria-labelledby="sections-heading">
-    <h2 id="sections-heading">Explore Sections</h2>
-    <div class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
-      <section class="space-y-2 py-5" aria-labelledby="travel-preview-heading">
-        <h3 id="travel-preview-heading">Travel</h3>
-        {
-          travelDescription?.length ? (
-            <div class="prose-content">
-              <PortableText value={travelDescription} />
-            </div>
-          ) : null
-        }
-        <p>
-          <a class="font-semibold no-underline" href="/travel">Visit Travel</a>
-        </p>
+  {
+    featuredPost ? (
+      <section class="space-y-6 border-t border-orange-200/70 pt-8 dark:border-brand-900/60">
+        <h2>Latest</h2>
+        <PostCard post={featuredPost} variant="featured" />
+        {morePosts.length ? (
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {morePosts.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        ) : null}
       </section>
+    ) : null
+  }
 
-      <section
-        class="space-y-2 py-5"
-        aria-labelledby="fulbright-preview-heading"
+  <section
+    class="space-y-5 border-t border-orange-200/70 pt-8 dark:border-brand-900/60"
+  >
+    <h2>Explore</h2>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <a
+        href="/fulbright"
+        class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
       >
-        <h3 id="fulbright-preview-heading">Fulbright</h3>
+        <h3
+          class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300"
+        >
+          Fulbright
+        </h3>
         {
-          fulbrightDescription?.length ? (
-            <div class="prose-content">
-              <PortableText value={fulbrightDescription} />
+          homeCopy?.fulbrightDescription?.length ? (
+            <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
+              <PortableText value={homeCopy.fulbrightDescription} />
             </div>
           ) : null
         }
-        <p>
-          <a href="/fulbright">Updates</a> ·{" "}
-          <a href="/fulbright/resources">Resources</a> ·{" "}
-          <a href="/fulbright/esol">ESOL Tools</a>
-        </p>
-      </section>
+        <span
+          class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+          style="font-family: var(--font-sans);"
+          >Vignettes & Resources &rarr;</span
+        >
+      </a>
 
-      <section class="space-y-2 py-5" aria-labelledby="kids-preview-heading">
-        <h3 id="kids-preview-heading">Kids' Corner</h3>
+      <a
+        href="/kids-corner"
+        class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+      >
+        <h3
+          class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300"
+        >
+          Kids' Corner
+        </h3>
         {
-          kidsDescription?.length ? (
-            <div class="prose-content">
-              <PortableText value={kidsDescription} />
+          homeCopy?.kidsDescription?.length ? (
+            <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
+              <PortableText value={homeCopy.kidsDescription} />
             </div>
           ) : null
         }
-        <p>
-          <a href="/kids-corner">Home</a> · <a href="/kids-corner/polls"
-            >Polls</a
-          >{" "}
-          · <a href="/kids-corner/tours">Tours</a>
-        </p>
-      </section>
+        <span
+          class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+          style="font-family: var(--font-sans);">Polls & Tours &rarr;</span
+        >
+      </a>
 
-      <section class="space-y-2 py-5" aria-labelledby="author-preview-heading">
-        <h3 id="author-preview-heading">Author</h3>
-        {
-          authorDescription?.length ? (
-            <div class="prose-content">
-              <PortableText value={authorDescription} />
-            </div>
-          ) : null
-        }
-        <p>
-          <a class="font-semibold no-underline" href="/author">Visit Author</a>
-        </p>
-      </section>
-
-      <section class="space-y-2 py-5" aria-labelledby="contact-preview-heading">
-        <h3 id="contact-preview-heading">Contact</h3>
-        {
-          contactDescription?.length ? (
-            <div class="prose-content">
-              <PortableText value={contactDescription} />
-            </div>
-          ) : null
-        }
-        <p>
-          <a class="font-semibold no-underline" href="/contact">Visit Contact</a
+      {
+        latestTour ? (
+          <a
+            href={getPostPath(latestTour.slug.current, latestTour.category)}
+            class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
           >
-        </p>
-      </section>
+            <p
+              class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+              style="font-family: var(--font-sans);"
+            >
+              Latest Tour
+            </p>
+            <h3 class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+              {latestTour.title ?? "---"}
+            </h3>
+            {latestTour.excerpt ? (
+              <p class="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                {latestTour.excerpt}
+              </p>
+            ) : null}
+            <span
+              class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+              style="font-family: var(--font-sans);"
+            >
+              Read more &rarr;
+            </span>
+          </a>
+        ) : (
+          <a
+            href="/author"
+            class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+          >
+            <h3 class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+              Author
+            </h3>
+            {homeCopy?.authorDescription?.length ? (
+              <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
+                <PortableText value={homeCopy.authorDescription} />
+              </div>
+            ) : null}
+            <span
+              class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+              style="font-family: var(--font-sans);"
+            >
+              Books & News &rarr;
+            </span>
+          </a>
+        )
+      }
     </div>
   </section>
 </Layout>

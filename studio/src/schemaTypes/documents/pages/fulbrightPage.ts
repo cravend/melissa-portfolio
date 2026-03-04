@@ -11,13 +11,13 @@ export default defineType({
       type: 'simpleBlockContent',
     }),
     defineField({
-      name: 'resourcesDescription',
-      title: 'Resources Description',
+      name: 'vignettesDescription',
+      title: 'Vignettes Description',
       type: 'simpleBlockContent',
     }),
     defineField({
-      name: 'esolDescription',
-      title: 'ESOL Description',
+      name: 'resourcesDescription',
+      title: 'Resources Description',
       type: 'simpleBlockContent',
     }),
   ],

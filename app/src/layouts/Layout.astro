@@ -1,6 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { getSiteSettings } from "../utils/sanity";
+import { getSiteSettings, getContactPage } from "../utils/sanity";
 import { NAV_ITEMS } from "../utils/routes";
 import "../styles/global.css";
 
@@ -9,9 +9,13 @@ interface Props {
 }
 
 const { title } = Astro.props;
-const siteSettings = await getSiteSettings();
+const [siteSettings, contactPage] = await Promise.all([
+  getSiteSettings(),
+  getContactPage(),
+]);
 const brandName = siteSettings?.brandName ?? siteSettings?.siteTitle ?? "---";
 const footerText = siteSettings?.footerText ?? "---";
+const contactLinks = contactPage?.contactLinks ?? [];
 const pathname = Astro.url.pathname;
 
 const isActive = (href: string) =>
@@ -63,11 +67,33 @@ const isActive = (href: string) =>
           </nav>
         </div>
       </header>
-      <main class="flex-1 space-y-6">
+      <main class="flex-1 space-y-8">
         <slot />
       </main>
       <footer class="soft-divider border-t pt-6">
-        <p class="site-meta text-sm">{footerText}</p>
+        <div
+          class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p class="site-meta text-sm">{footerText}</p>
+          {
+            contactLinks.length ? (
+              <address class="not-italic site-meta">
+                <ul class="flex flex-wrap gap-x-4 gap-y-1 space-y-0 text-sm text-zinc-500 dark:text-zinc-400">
+                  {contactLinks.map((link) => (
+                    <li class="space-y-0">
+                      <a
+                        href={link.url}
+                        class="no-underline hover:text-brand-600 dark:hover:text-brand-300"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </address>
+            ) : null
+          }
+        </div>
       </footer>
     </div>
   </body>

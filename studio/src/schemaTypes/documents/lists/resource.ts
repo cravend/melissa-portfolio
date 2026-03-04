@@ -23,18 +23,6 @@ export default defineType({
       },
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-      options: {
-        list: [
-          { title: 'Fulbright Prep', value: 'fulbright-prep' },
-          { title: 'ESOL', value: 'esol' },
-        ],
-      },
-    }),
-    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
@@ -76,15 +64,6 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      category: 'category',
-    },
-    prepare(selection) {
-      const { title, category } = selection
-      const categoryLabel = category === 'fulbright-prep' ? 'Fulbright Prep' : 'ESOL'
-      return {
-        title,
-        subtitle: categoryLabel,
-      }
     },
   },
 })

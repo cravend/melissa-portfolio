@@ -1,0 +1,95 @@
+---
+import { urlFor } from "../utils/image";
+import { formatDate } from "../utils";
+import { getPostPath, CATEGORY_LABELS } from "../utils/routes";
+import type { Post } from "../utils/sanity";
+
+interface Props {
+  post: Post;
+  variant?: "default" | "featured";
+}
+
+const { post, variant = "default" } = Astro.props;
+const href = getPostPath(post.slug.current, post.category);
+const date = post.publishedAt || post._createdAt;
+const isFeatured = variant === "featured";
+---
+
+<article
+  class:list={[
+    "group relative overflow-hidden rounded-2xl border border-orange-200/60 bg-white transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900",
+    isFeatured && "md:grid md:grid-cols-2",
+  ]}
+>
+  {
+    post.mainImage ? (
+      <a
+        href={href}
+        class="block no-underline"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <img
+          class:list={[
+            "w-full object-cover rounded-none",
+            isFeatured
+              ? "aspect-[16/10] md:aspect-auto md:h-full"
+              : "aspect-[16/10]",
+          ]}
+          src={urlFor(post.mainImage)
+            .width(isFeatured ? 960 : 640)
+            .height(isFeatured ? 600 : 400)
+            .url()}
+          alt={post.mainImage?.alt ?? ""}
+        />
+      </a>
+    ) : null
+  }
+  <div
+    class:list={[
+      "space-y-2 p-5",
+      isFeatured && "md:flex md:flex-col md:justify-center md:p-8",
+    ]}
+  >
+    {
+      post.category ? (
+        <p
+          class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+          style="font-family: var(--font-sans);"
+        >
+          {post.category === "fulbright"
+            ? "Vignette"
+            : (CATEGORY_LABELS[post.category] ?? post.category)}
+        </p>
+      ) : null
+    }
+    <h3
+      class:list={[
+        "font-semibold tracking-tight text-zinc-950 dark:text-zinc-50",
+        isFeatured ? "text-2xl md:text-3xl" : "text-lg md:text-xl",
+      ]}
+    >
+      <a
+        href={href}
+        class="no-underline text-inherit hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+      >
+        {post.title ?? "---"}
+        <span class="absolute inset-0" aria-hidden="true"></span>
+      </a>
+    </h3>
+    <time
+      datetime={date}
+      class="block text-sm text-zinc-500 dark:text-zinc-400"
+      style="font-family: var(--font-sans);"
+    >
+      {formatDate(date)}
+    </time>
+    {
+      post.excerpt ? (
+        <p class="line-clamp-3 text-zinc-600 dark:text-zinc-400">
+          {post.excerpt}
+        </p>
+      ) : null
+    }
+  </div>
+</article>

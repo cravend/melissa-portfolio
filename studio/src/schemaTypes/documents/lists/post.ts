@@ -31,7 +31,8 @@ export default defineType({
         list: [
           { title: 'Travel', value: 'travel' },
           { title: 'Fulbright', value: 'fulbright' },
-          { title: "Kids' Corner", value: 'kids-corner' },
+          { title: "Kids' Corner / Polls", value: 'kids-corner/polls' },
+          { title: "Kids' Corner / Tours", value: 'kids-corner/tours' },
           { title: 'Author', value: 'author' },
         ],
       },
@@ -84,12 +85,14 @@ export default defineType({
     },
     prepare(selection) {
       const { category, publishedAt } = selection
-      const categoryLabel =
-        category === 'kids-corner'
-          ? "Kids' Corner"
-          : category
-            ? `${category.charAt(0).toUpperCase()}${category.slice(1)}`
-            : 'Uncategorized'
+      const categoryLabels: Record<string, string> = {
+        travel: 'Travel',
+        fulbright: 'Fulbright',
+        'kids-corner/polls': "Kids' Corner / Polls",
+        'kids-corner/tours': "Kids' Corner / Tours",
+        author: 'Author',
+      }
+      const categoryLabel = categoryLabels[category] ?? 'Uncategorized'
       const dateLabel = publishedAt ? new Date(publishedAt).toLocaleDateString() : 'No date'
 
       return { ...selection, subtitle: `${categoryLabel} · ${dateLabel}` }

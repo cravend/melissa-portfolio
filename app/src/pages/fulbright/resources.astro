@@ -2,21 +2,30 @@
 import Layout from "../../layouts/Layout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import ResourceList from "../../components/ResourceList.astro";
-import { getResourcesByCategory } from "../../utils/sanity";
+import { PortableText } from "astro-portabletext";
+import { getResources, getFulbrightPage } from "../../utils/sanity";
 
-const resources = await getResourcesByCategory("fulbright-prep");
+const [resources, fulbrightPage] = await Promise.all([
+  getResources(),
+  getFulbrightPage(),
+]);
+const description = fulbrightPage?.resourcesDescription;
 ---
 
 <Layout title="Fulbright Resources">
   <section class="space-y-2">
-    <h1>Fulbright Resources</h1>
+    <h1>Resources</h1>
     <Breadcrumb />
-    <p class="max-w-3xl">
-      Preparation resources and downloadable materials for Fulbright work.
-    </p>
+    {
+      description?.length ? (
+        <div class="prose-content max-w-2xl">
+          <PortableText value={description} />
+        </div>
+      ) : null
+    }
   </section>
   <ResourceList
     resources={resources}
-    emptyMessage="No Fulbright preparation resources are published yet."
+    emptyMessage="No resources are published yet."
   />
 </Layout>

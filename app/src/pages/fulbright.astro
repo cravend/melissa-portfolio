@@ -1,25 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PostCard from "../components/PostCard.astro";
+import ResourceList from "../components/ResourceList.astro";
 import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import { formatDate } from "../utils";
 import {
   getPostsByCategory,
-  getResourcesByCategory,
+  getResources,
   getFulbrightPage,
 } from "../utils/sanity";
-import { getPostPath } from "../utils/routes";
 
-const [updates, prepResources, esolResources, fulbrightPage] =
-  await Promise.all([
-    getPostsByCategory("fulbright"),
-    getResourcesByCategory("fulbright-prep"),
-    getResourcesByCategory("esol"),
-    getFulbrightPage(),
-  ]);
+const [updates, resources, fulbrightPage] = await Promise.all([
+  getPostsByCategory("fulbright"),
+  getResources(),
+  getFulbrightPage(),
+]);
 const intro = fulbrightPage?.intro;
+const vignettesDescription = fulbrightPage?.vignettesDescription;
 const resourcesDescription = fulbrightPage?.resourcesDescription;
-const esolDescription = fulbrightPage?.esolDescription;
+const featured = updates[0];
+const moreUpdates = updates.slice(1);
 ---
 
 <Layout title="Fulbright">
@@ -28,81 +28,75 @@ const esolDescription = fulbrightPage?.esolDescription;
     <Breadcrumb />
     {
       intro?.length ? (
-        <div class="prose-content">
+        <div class="prose-content max-w-2xl">
           <PortableText value={intro} />
         </div>
       ) : null
     }
-    <p>
-      <a href="/fulbright/resources">Resources</a> ·{" "}
-      <a href="/fulbright/esol">ESOL Tools</a>
-    </p>
   </section>
 
-  <section class="space-y-4" aria-labelledby="fulbright-updates-heading">
-    <h2 id="fulbright-updates-heading">Updates</h2>
-    {
-      updates.length ? (
-        <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
-          {updates.map((post) => (
-            <li class="py-5">
-              <article class="space-y-3">
-                <header class="space-y-1">
-                  <h3>
-                    <a href={getPostPath(post.slug.current, post.category)}>
-                      {post.title ?? "---"}
-                    </a>
-                  </h3>
-                  <p>
-                    <time datetime={post.publishedAt || post._createdAt}>
-                      {formatDate(post.publishedAt || post._createdAt)}
-                    </time>
-                  </p>
-                </header>
-                {post.excerpt ? <p>{post.excerpt}</p> : null}
-              </article>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No Fulbright updates are published yet.</p>
-      )
-    }
-  </section>
+  {
+    featured ? (
+      <section class="space-y-5">
+        <h2>Vignettes</h2>
+        {vignettesDescription?.length ? (
+          <div class="prose-content max-w-2xl">
+            <PortableText value={vignettesDescription} />
+          </div>
+        ) : null}
+        <PostCard post={featured} variant="featured" />
+        {moreUpdates.length ? (
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {moreUpdates.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        ) : null}
+      </section>
+    ) : (
+      <section class="space-y-4">
+        <h2>Vignettes</h2>
+        {vignettesDescription?.length ? (
+          <div class="prose-content max-w-2xl">
+            <PortableText value={vignettesDescription} />
+          </div>
+        ) : null}
+        <section class="rounded-2xl border border-dashed border-orange-200/80 bg-orange-50/30 p-8 text-center dark:border-brand-900/50 dark:bg-zinc-900/50">
+          <p class="text-zinc-500 dark:text-zinc-400">
+            No vignettes are published yet.
+          </p>
+        </section>
+      </section>
+    )
+  }
 
   <section
-    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
-    aria-labelledby="fulbright-resources-heading"
+    class="space-y-5 border-t border-orange-200/70 pt-8 dark:border-brand-900/60"
   >
-    <h2 id="fulbright-resources-heading">Resources</h2>
+    <div class="flex items-baseline justify-between gap-4">
+      <h2>Resources</h2>
+      {
+        resources.length ? (
+          <a
+            href="/fulbright/resources"
+            class="text-sm font-medium no-underline text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
+            style="font-family: var(--font-sans);"
+          >
+            View all &rarr;
+          </a>
+        ) : null
+      }
+    </div>
     {
       resourcesDescription?.length ? (
-        <div class="prose-content">
+        <div class="prose-content max-w-2xl">
           <PortableText value={resourcesDescription} />
         </div>
       ) : null
     }
-    <p>
-      <a href="/fulbright/resources">View all Fulbright resources</a>
-    </p>
-    <p>{prepResources.length} resources currently available.</p>
-  </section>
-
-  <section
-    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
-    aria-labelledby="fulbright-esol-heading"
-  >
-    <h2 id="fulbright-esol-heading">ESOL Tools</h2>
-    {
-      esolDescription?.length ? (
-        <div class="prose-content">
-          <PortableText value={esolDescription} />
-        </div>
-      ) : null
-    }
-    <p>
-      <a href="/fulbright/esol">View all ESOL tools</a>
-    </p>
-    <p>{esolResources.length} ESOL tools currently available.</p>
+    <ResourceList
+      resources={resources}
+      emptyMessage="No resources are published yet."
+    />
   </section>
 </Layout>

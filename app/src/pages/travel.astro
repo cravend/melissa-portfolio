@@ -1,17 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PostCard from "../components/PostCard.astro";
 import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import { formatDate } from "../utils";
-import { urlFor } from "../utils/image";
 import { getTravelPage, getPostsByCategory } from "../utils/sanity";
-import { getPostPath } from "../utils/routes";
 
 const [travelPosts, travelPage] = await Promise.all([
   getPostsByCategory("travel"),
   getTravelPage(),
 ]);
 const intro = travelPage?.intro;
+const featured = travelPosts[0];
+const rest = travelPosts.slice(1);
 ---
 
 <Layout title="Travel">
@@ -20,46 +20,27 @@ const intro = travelPage?.intro;
     <Breadcrumb />
     {
       intro?.length ? (
-        <div class="prose-content">
+        <div class="prose-content max-w-2xl">
           <PortableText value={intro} />
         </div>
       ) : null
     }
-    {
-      travelPosts.length ? (
-        <ul class="divide-y divide-orange-200/70 dark:divide-brand-900/60">
-          {travelPosts.map((post) => (
-            <li class="py-6">
-              <article class="space-y-4">
-                {post.mainImage ? (
-                  <figure>
-                    <img
-                      class="aspect-[16/10] w-full max-w-2xl object-cover"
-                      src={urlFor(post.mainImage).width(800).height(500).url()}
-                      alt={post.mainImage?.alt ?? "---"}
-                    />
-                  </figure>
-                ) : null}
-                <header class="space-y-1">
-                  <h2>
-                    <a href={getPostPath(post.slug.current, post.category)}>
-                      {post.title ?? "---"}
-                    </a>
-                  </h2>
-                  <p>
-                    <time datetime={post.publishedAt || post._createdAt}>
-                      {formatDate(post.publishedAt || post._createdAt)}
-                    </time>
-                  </p>
-                </header>
-                {post.excerpt ? <p>{post.excerpt}</p> : null}
-              </article>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No travel posts are published yet.</p>
-      )
-    }
   </section>
+
+  {
+    featured ? (
+      <section class="space-y-5">
+        <PostCard post={featured} variant="featured" />
+        {rest.length ? (
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        ) : null}
+      </section>
+    ) : (
+      <p>No travel posts are published yet.</p>
+    )
+  }
 </Layout>

@@ -8,8 +8,6 @@ const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const configuredTypes = [
   'post',
   'resource',
-  'tour',
-  'poll',
   'book',
   'siteSettings',
   'travelPage',
@@ -83,7 +81,8 @@ export default defineConfig({
                       .title('Travel Posts')
                       .schemaType('post')
                       .filter('_type == "post" && category == $category')
-                      .params({ category: 'travel' }),
+                      .params({ category: 'travel' })
+                      .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
                   ),
                 S.listItem()
                   .title('Fulbright Posts')
@@ -92,16 +91,28 @@ export default defineConfig({
                       .title('Fulbright Posts')
                       .schemaType('post')
                       .filter('_type == "post" && category == $category')
-                      .params({ category: 'fulbright' }),
+                      .params({ category: 'fulbright' })
+                      .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
                   ),
                 S.listItem()
-                  .title("Kids' Corner Posts")
+                  .title("Kids' Corner / Polls")
                   .child(
                     S.documentList()
-                      .title("Kids' Corner Posts")
+                      .title("Kids' Corner / Polls")
                       .schemaType('post')
                       .filter('_type == "post" && category == $category')
-                      .params({ category: 'kids-corner' }),
+                      .params({ category: 'kids-corner/polls' })
+                      .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
+                  ),
+                S.listItem()
+                  .title("Kids' Corner / Tours")
+                  .child(
+                    S.documentList()
+                      .title("Kids' Corner / Tours")
+                      .schemaType('post')
+                      .filter('_type == "post" && category == $category')
+                      .params({ category: 'kids-corner/tours' })
+                      .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
                   ),
                 S.listItem()
                   .title('Author Posts')
@@ -110,30 +121,12 @@ export default defineConfig({
                       .title('Author Posts')
                       .schemaType('post')
                       .filter('_type == "post" && category == $category')
-                      .params({ category: 'author' }),
+                      .params({ category: 'author' })
+                      .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
                   ),
                 S.divider(),
-                S.listItem()
-                  .title('Fulbright Prep Resources')
-                  .child(
-                    S.documentList()
-                      .title('Fulbright Prep Resources')
-                      .schemaType('resource')
-                      .filter('_type == "resource" && category == $category')
-                      .params({ category: 'fulbright-prep' }),
-                  ),
-                S.listItem()
-                  .title('ESOL Resources')
-                  .child(
-                    S.documentList()
-                      .title('ESOL Resources')
-                      .schemaType('resource')
-                      .filter('_type == "resource" && category == $category')
-                      .params({ category: 'esol' }),
-                  ),
+                S.documentTypeListItem('resource').title('Resources'),
                 S.divider(),
-                S.documentTypeListItem('tour').title('Tours'),
-                S.documentTypeListItem('poll').title('Polls'),
                 S.documentTypeListItem('book').title('Books'),
               ]),
           )

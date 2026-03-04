@@ -1,10 +1,19 @@
 import { sanityClient } from "sanity:client";
 import type { PortableTextBlock } from "@portabletext/types";
-import type { Image, ImageAsset, Slug } from "@sanity/types";
+import type { ImageAsset, Slug } from "@sanity/types";
 import groq from "groq";
 
-export type PostCategory = "travel" | "fulbright" | "kids-corner" | "author";
-export type ResourceCategory = "fulbright-prep" | "esol";
+export type PostCategory =
+  | "travel"
+  | "fulbright"
+  | "kids-corner/polls"
+  | "kids-corner/tours"
+  | "author";
+
+const KIDS_CORNER_CATEGORIES: PostCategory[] = [
+  "kids-corner/polls",
+  "kids-corner/tours",
+];
 
 export async function getPosts(): Promise<Post[]> {
   return await sanityClient.fetch(
@@ -43,47 +52,31 @@ export async function getPostByCategory(
   );
 }
 
-export async function getResourcesByCategory(
-  category: ResourceCategory
-): Promise<Resource[]> {
+export async function getResources(): Promise<Resource[]> {
   return await sanityClient.fetch(
-    groq`*[_type == "resource" && category == $category && defined(slug.current)] | order(_createdAt desc){
+    groq`*[_type == "resource" && defined(slug.current)] | order(_createdAt desc){
       ...,
       downloads[]{
         label,
         "url": file.asset->url
       }
-    }`,
-    {
-      category,
-    }
+    }`
   );
 }
 
-export async function getTours(): Promise<Tour[]> {
+export async function getKidsCornerPosts(): Promise<Post[]> {
   return await sanityClient.fetch(
-    groq`*[_type == "tour" && defined(slug.current)] | order(_createdAt desc)`
+    groq`*[_type == "post" && category in $categories && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`,
+    { categories: KIDS_CORNER_CATEGORIES }
   );
 }
 
-export async function getTour(slug: string): Promise<Tour> {
+export async function getLatestPostByCategory(
+  category: PostCategory
+): Promise<Post | null> {
   return await sanityClient.fetch(
-    groq`*[_type == "tour" && slug.current == $slug][0]`,
-    {
-      slug,
-    }
-  );
-}
-
-export async function getLatestTour(): Promise<Tour | null> {
-  return await sanityClient.fetch(
-    groq`*[_type == "tour" && defined(slug.current)] | order(_createdAt desc)[0]`
-  );
-}
-
-export async function getActivePoll(): Promise<Poll | null> {
-  return await sanityClient.fetch(
-    groq`*[_type == "poll" && active == true] | order(_updatedAt desc)[0]`
+    groq`*[_type == "post" && category == $category && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)[0]`,
+    { category }
   );
 }
 
@@ -108,13 +101,13 @@ export async function getTravelPage(): Promise<TravelPageCopy | null> {
 
 export async function getFulbrightPage(): Promise<FulbrightPageCopy | null> {
   return await sanityClient.fetch(
-    groq`*[_type == "fulbrightPage"][0]{ intro, resourcesDescription, esolDescription }`
+    groq`*[_type == "fulbrightPage"][0]{ intro, vignettesDescription, resourcesDescription }`
   );
 }
 
 export async function getKidsCornerPage(): Promise<KidsCornerPageCopy | null> {
   return await sanityClient.fetch(
-    groq`*[_type == "kidsCornerPage"][0]{ intro, pollsSectionDescription }`
+    groq`*[_type == "kidsCornerPage"][0]{ intro }`
   );
 }
 
@@ -164,7 +157,6 @@ export interface Resource {
   _createdAt: string;
   title?: string;
   slug: Slug;
-  category?: ResourceCategory;
   description?: string;
   body?: PortableTextBlock[];
   downloads?: ResourceDownload[];
@@ -198,13 +190,14 @@ export interface HomePageCopy {
 
 export interface FulbrightPageCopy {
   intro?: PortableTextBlock[];
+  vignettesDescription?: PortableTextBlock[];
   resourcesDescription?: PortableTextBlock[];
-  esolDescription?: PortableTextBlock[];
 }
 
 export interface KidsCornerPageCopy {
   intro?: PortableTextBlock[];
   pollsSectionDescription?: PortableTextBlock[];
+  toursDescription?: PortableTextBlock[];
 }
 
 export interface ContactLink {
@@ -215,31 +208,6 @@ export interface ContactLink {
 export interface ContactPageCopy {
   intro?: PortableTextBlock[];
   contactLinks?: ContactLink[];
-}
-
-export interface Tour {
-  _type: "tour";
-  _createdAt: string;
-  title?: string;
-  slug: Slug;
-  description?: string;
-  body?: PortableTextBlock[];
-  location?: string;
-  gallery?: (Image & { alt?: string; caption?: string })[];
-}
-
-export interface Poll {
-  _type: "poll";
-  _createdAt: string;
-  question?: string;
-  options?: PollOption[];
-  active?: boolean;
-  resultsDisplay?: "always" | "afterVote" | "hidden";
-}
-
-export interface PollOption {
-  label?: string;
-  votes?: number;
 }
 
 export interface BookPurchaseLink {

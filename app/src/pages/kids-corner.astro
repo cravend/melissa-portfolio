@@ -2,19 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import { PortableText } from "astro-portabletext";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import {
-  getActivePoll,
-  getLatestTour,
-  getKidsCornerPage,
-} from "../utils/sanity";
+import { urlFor } from "../utils/image";
+import { formatDate } from "../utils";
+import { getPostPath } from "../utils/routes";
+import { getLatestPostByCategory, getKidsCornerPage } from "../utils/sanity";
 
-const [activePoll, latestTour, kidsCornerPage] = await Promise.all([
-  getActivePoll(),
-  getLatestTour(),
+const [latestPoll, latestTour, kidsCornerPage] = await Promise.all([
+  getLatestPostByCategory("kids-corner/polls"),
+  getLatestPostByCategory("kids-corner/tours"),
   getKidsCornerPage(),
 ]);
 const intro = kidsCornerPage?.intro;
-const pollsSectionDescription = kidsCornerPage?.pollsSectionDescription;
 ---
 
 <Layout title="Kids' Corner">
@@ -23,86 +21,131 @@ const pollsSectionDescription = kidsCornerPage?.pollsSectionDescription;
     <Breadcrumb />
     {
       intro?.length ? (
-        <div class="prose-content">
+        <div class="prose-content max-w-2xl">
           <PortableText value={intro} />
         </div>
       ) : null
     }
-    <p>
-      <a href="/kids-corner/polls">Polls</a> ·{" "}
-      <a href="/kids-corner/tours">Tours</a>
-    </p>
   </section>
 
-  <section
-    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
-    aria-labelledby="question-week-heading"
-  >
-    <h2 id="question-week-heading">Question of the Week</h2>
+  <div class="grid gap-6 sm:grid-cols-2">
     {
-      activePoll ? (
-        <p>{activePoll.question ?? "---"}</p>
+      latestPoll ? (
+        <a
+          href={getPostPath(latestPoll.slug.current, latestPoll.category)}
+          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+        >
+          <p
+            class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+            style="font-family: var(--font-sans);"
+          >
+            Latest Poll
+          </p>
+          <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+            {latestPoll.title ?? "---"}
+          </h2>
+          {latestPoll.excerpt ? (
+            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+              {latestPoll.excerpt}
+            </p>
+          ) : null}
+          <span
+            class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+            style="font-family: var(--font-sans);"
+          >
+            Read more &rarr;
+          </span>
+        </a>
       ) : (
-        <p>A new question is coming soon. Check back for this week's prompt.</p>
+        <a
+          href="/kids-corner/polls"
+          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+        >
+          <p
+            class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+            style="font-family: var(--font-sans);"
+          >
+            Polls
+          </p>
+          <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+            Question of the Week
+          </h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">
+            A new question is coming soon. Check back for this week's prompt.
+          </p>
+          <span
+            class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+            style="font-family: var(--font-sans);"
+          >
+            View polls &rarr;
+          </span>
+        </a>
       )
     }
-    <p><a href="/kids-corner/polls">Go to poll questions</a></p>
-  </section>
 
-  <section
-    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
-    aria-labelledby="latest-tour-heading"
-  >
-    <h2 id="latest-tour-heading">Latest Tour</h2>
     {
       latestTour ? (
-        <article class="space-y-2">
-          <h3>
-            <a href={`/kids-corner/tours/${latestTour.slug.current}`}>
-              {latestTour.title ?? "---"}
-            </a>
-          </h3>
-          {latestTour.description ? <p>{latestTour.description}</p> : null}
-          {latestTour.location ? (
-            <dl>
-              <dt>Location</dt>
-              <dd>{latestTour.location}</dd>
-            </dl>
+        <a
+          href={getPostPath(latestTour.slug.current, latestTour.category)}
+          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white no-underline overflow-hidden transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+        >
+          {latestTour.mainImage ? (
+            <img
+              class="aspect-[16/10] w-full object-cover rounded-none"
+              src={urlFor(latestTour.mainImage).width(640).height(400).url()}
+              alt={latestTour.mainImage?.alt ?? latestTour.title ?? ""}
+            />
           ) : null}
-        </article>
+          <div class="flex flex-col gap-2 p-6 pt-0">
+            {!latestTour.mainImage ? (
+              <p
+                class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+                style="font-family: var(--font-sans);"
+              >
+                Latest Tour
+              </p>
+            ) : null}
+            <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+              {latestTour.title ?? "---"}
+            </h2>
+            {latestTour.excerpt ? (
+              <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                {latestTour.excerpt}
+              </p>
+            ) : null}
+            <span
+              class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+              style="font-family: var(--font-sans);"
+            >
+              Explore tour &rarr;
+            </span>
+          </div>
+        </a>
       ) : (
-        <p>No tours are published yet.</p>
+        <a
+          href="/kids-corner/tours"
+          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+        >
+          <p
+            class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+            style="font-family: var(--font-sans);"
+          >
+            Tours
+          </p>
+          <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+            Explore Places & Stories
+          </h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">
+            Tours for young learners are coming soon.
+          </p>
+          <span
+            class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+            style="font-family: var(--font-sans);"
+          >
+            Browse tours &rarr;
+          </span>
+        </a>
       )
     }
-    <p><a href="/kids-corner/tours">Browse all tours</a></p>
-  </section>
-
-  <section
-    class="space-y-3 border-t border-orange-200/70 pt-5 dark:border-brand-900/60"
-    aria-labelledby="poll-teaser-heading"
-  >
-    <h2 id="poll-teaser-heading">Polls</h2>
-    {
-      pollsSectionDescription?.length ? (
-        <div class="prose-content">
-          <PortableText value={pollsSectionDescription} />
-        </div>
-      ) : null
-    }
-    {
-      activePoll?.options?.length ? (
-        <article class="space-y-2">
-          <h3>{activePoll.question ?? "---"}</h3>
-          <ul class="list-disc pl-5">
-            {activePoll.options.map((option) => (
-              <li>{option.label ?? "---"}</li>
-            ))}
-          </ul>
-        </article>
-      ) : (
-        <p>Poll options will appear here when a poll is active.</p>
-      )
-    }
-    <p><a href="/kids-corner/polls">Visit polls</a></p>
-  </section>
+  </div>
 </Layout>

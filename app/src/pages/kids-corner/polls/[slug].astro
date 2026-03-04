@@ -5,7 +5,7 @@ import { getPostByCategory, getPostsByCategory } from "../../../utils/sanity";
 import { POST_DETAIL_CATEGORY_ROUTES } from "../../../utils/routes";
 
 export async function getStaticPaths() {
-  const posts = await getPostsByCategory("kids-corner/tours");
+  const posts = await getPostsByCategory("kids-corner/polls");
 
   return posts.map((post) => ({
     params: { slug: post.slug.current },
@@ -13,13 +13,13 @@ export async function getStaticPaths() {
 }
 
 const slug = Astro.params.slug as string;
-const post = await getPostByCategory(slug, "kids-corner/tours");
+const post = await getPostByCategory(slug, "kids-corner/polls");
 
 if (!post) {
-  return Astro.redirect("/kids-corner/tours", 302);
+  return Astro.redirect("/kids-corner/polls", 302);
 }
 
-const parentRoute = POST_DETAIL_CATEGORY_ROUTES["kids-corner/tours"];
+const parentRoute = POST_DETAIL_CATEGORY_ROUTES["kids-corner/polls"];
 ---
 
 <Layout title={post.title ?? "---"}>

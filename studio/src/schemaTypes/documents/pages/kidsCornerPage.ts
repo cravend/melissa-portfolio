@@ -10,11 +10,6 @@ export default defineType({
       title: 'Intro',
       type: 'simpleBlockContent',
     }),
-    defineField({
-      name: 'pollsSectionDescription',
-      title: 'Polls Section Description',
-      type: 'simpleBlockContent',
-    }),
   ],
   preview: {
     prepare: () => ({ title: "Kids' Corner Page" }),
