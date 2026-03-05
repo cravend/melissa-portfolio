@@ -101,7 +101,7 @@ export async function getTravelPage(): Promise<TravelPageCopy | null> {
 
 export async function getFulbrightPage(): Promise<FulbrightPageCopy | null> {
   return await sanityClient.fetch(
-    groq`*[_type == "fulbrightPage"][0]{ intro, vignettesDescription, resourcesDescription }`
+    groq`*[_type == "fulbrightPage"][0]{ intro, vignettesDescription, resourcesDescription, disclaimer }`
   );
 }
 
@@ -192,6 +192,7 @@ export interface FulbrightPageCopy {
   intro?: PortableTextBlock[];
   vignettesDescription?: PortableTextBlock[];
   resourcesDescription?: PortableTextBlock[];
+  disclaimer?: PortableTextBlock[];
 }
 
 export interface KidsCornerPageCopy {

@@ -20,6 +20,11 @@ export default defineType({
       title: 'Resources Description',
       type: 'simpleBlockContent',
     }),
+    defineField({
+      name: 'disclaimer',
+      title: 'Disclaimer',
+      type: 'simpleBlockContent',
+    }),
   ],
   preview: {
     prepare: () => ({ title: 'Fulbright Page' }),

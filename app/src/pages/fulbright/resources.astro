@@ -10,6 +10,7 @@ const [resources, fulbrightPage] = await Promise.all([
   getFulbrightPage(),
 ]);
 const description = fulbrightPage?.resourcesDescription;
+const disclaimer = fulbrightPage?.disclaimer;
 ---
 
 <Layout title="Fulbright Resources">
@@ -28,4 +29,11 @@ const description = fulbrightPage?.resourcesDescription;
     resources={resources}
     emptyMessage="No resources are published yet."
   />
+  {
+    disclaimer?.length ? (
+      <div class="prose-content max-w-2xl pt-6 border-t border-orange-200/70 mt-8 dark:border-brand-900/60">
+        <PortableText value={disclaimer} />
+      </div>
+    ) : null
+  }
 </Layout>

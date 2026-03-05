@@ -18,6 +18,7 @@ const [updates, resources, fulbrightPage] = await Promise.all([
 const intro = fulbrightPage?.intro;
 const vignettesDescription = fulbrightPage?.vignettesDescription;
 const resourcesDescription = fulbrightPage?.resourcesDescription;
+const disclaimer = fulbrightPage?.disclaimer;
 const featured = updates[0];
 const moreUpdates = updates.slice(1);
 ---
@@ -98,5 +99,12 @@ const moreUpdates = updates.slice(1);
       resources={resources}
       emptyMessage="No resources are published yet."
     />
+    {
+      disclaimer?.length ? (
+        <div class="prose-content max-w-2xl pt-6">
+          <PortableText value={disclaimer} />
+        </div>
+      ) : null
+    }
   </section>
 </Layout>
