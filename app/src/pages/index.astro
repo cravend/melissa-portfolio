@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PostCard from "../components/PostCard.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import { urlFor } from "../utils/image";
 import { getPostPath } from "../utils/routes";
 import {
@@ -47,11 +47,17 @@ const morePosts = recentPosts.slice(1);
         <h1>{headline}</h1>
         {
           bio?.length ? (
-            <div class="prose-content max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-300">
-              <PortableText value={bio} />
+            <div class="prose-content text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+              <SimpleBlockContent value={bio} />
             </div>
           ) : null
         }
+        <a
+          href="/contact"
+          class="inline-flex rounded-full border border-brand-400 px-4 py-2 text-sm font-medium no-underline text-brand-700 transition-colors hover:bg-brand-50 dark:border-brand-600 dark:text-brand-300 dark:hover:bg-brand-950"
+        >
+          Contact
+        </a>
       </div>
     </div>
   </section>
@@ -89,7 +95,7 @@ const morePosts = recentPosts.slice(1);
         {
           homeCopy?.fulbrightDescription?.length ? (
             <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
-              <PortableText value={homeCopy.fulbrightDescription} />
+              <SimpleBlockContent value={homeCopy.fulbrightDescription} />
             </div>
           ) : null
         }
@@ -112,7 +118,7 @@ const morePosts = recentPosts.slice(1);
         {
           homeCopy?.kidsDescription?.length ? (
             <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
-              <PortableText value={homeCopy.kidsDescription} />
+              <SimpleBlockContent value={homeCopy.kidsDescription} />
             </div>
           ) : null
         }
@@ -159,7 +165,7 @@ const morePosts = recentPosts.slice(1);
             </h3>
             {homeCopy?.authorDescription?.length ? (
               <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
-                <PortableText value={homeCopy.authorDescription} />
+                <SimpleBlockContent value={homeCopy.authorDescription} />
               </div>
             ) : null}
             <span

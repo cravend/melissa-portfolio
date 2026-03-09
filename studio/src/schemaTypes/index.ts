@@ -1,4 +1,5 @@
 import blockContent from './objects/blockContent'
+import collapsible from './objects/collapsible'
 import simpleBlockContent from './objects/simpleBlockContent'
 import book from './documents/lists/book'
 import post from './documents/lists/post'
@@ -13,4 +14,10 @@ import travelPage from './documents/pages/travelPage'
 const listDocuments = [post, resource, book]
 const pageConfig = [siteSettings, travelPage, fulbrightPage, kidsCornerPage, authorPage, contactPage]
 
-export const schemaTypes = [...listDocuments, ...pageConfig, blockContent, simpleBlockContent]
+export const schemaTypes = [
+    ...listDocuments,
+    ...pageConfig,
+    blockContent,
+    simpleBlockContent,
+    collapsible,
+]

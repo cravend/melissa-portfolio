@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import PostCard from "../../components/PostCard.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../../components/SimpleBlockContent.astro";
 import { getPostsByCategory, getKidsCornerPage } from "../../utils/sanity";
 
 const [polls, kidsCornerPage] = await Promise.all([
@@ -20,8 +20,8 @@ const rest = polls.slice(1);
     <Breadcrumb />
     {
       pollsDescription?.length ? (
-        <div class="prose-content max-w-2xl">
-          <PortableText value={pollsDescription} />
+        <div class="prose-content">
+          <SimpleBlockContent value={pollsDescription} />
         </div>
       ) : null
     }

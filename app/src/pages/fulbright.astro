@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PostCard from "../components/PostCard.astro";
 import ResourceList from "../components/ResourceList.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import {
   getPostsByCategory,
@@ -29,8 +29,8 @@ const moreUpdates = updates.slice(1);
     <Breadcrumb />
     {
       intro?.length ? (
-        <div class="prose-content max-w-2xl">
-          <PortableText value={intro} />
+        <div class="prose-content">
+          <SimpleBlockContent value={intro} />
         </div>
       ) : null
     }
@@ -41,8 +41,8 @@ const moreUpdates = updates.slice(1);
       <section class="space-y-5">
         <h2>Vignettes</h2>
         {vignettesDescription?.length ? (
-          <div class="prose-content max-w-2xl">
-            <PortableText value={vignettesDescription} />
+          <div class="prose-content">
+            <SimpleBlockContent value={vignettesDescription} />
           </div>
         ) : null}
         <PostCard post={featured} variant="featured" />
@@ -58,8 +58,8 @@ const moreUpdates = updates.slice(1);
       <section class="space-y-4">
         <h2>Vignettes</h2>
         {vignettesDescription?.length ? (
-          <div class="prose-content max-w-2xl">
-            <PortableText value={vignettesDescription} />
+          <div class="prose-content">
+            <SimpleBlockContent value={vignettesDescription} />
           </div>
         ) : null}
         <section class="rounded-2xl border border-dashed border-orange-200/80 bg-orange-50/30 p-8 text-center dark:border-brand-900/50 dark:bg-zinc-900/50">
@@ -90,8 +90,8 @@ const moreUpdates = updates.slice(1);
     </div>
     {
       resourcesDescription?.length ? (
-        <div class="prose-content max-w-2xl">
-          <PortableText value={resourcesDescription} />
+        <div class="prose-content">
+          <SimpleBlockContent value={resourcesDescription} />
         </div>
       ) : null
     }
@@ -101,8 +101,8 @@ const moreUpdates = updates.slice(1);
     />
     {
       disclaimer?.length ? (
-        <div class="prose-content max-w-2xl pt-6">
-          <PortableText value={disclaimer} />
+        <div class="prose-content pt-6">
+          <SimpleBlockContent value={disclaimer} />
         </div>
       ) : null
     }

@@ -7,7 +7,10 @@ export default defineType({
   of: [
     defineArrayMember({
       type: "block",
-      styles: [{ title: "Normal", value: "normal" }],
+      styles: [
+        { title: "Normal", value: "normal" },
+        { title: "Centered", value: "center" },
+      ],
       marks: {
         decorators: [
           { title: "Strong", value: "strong" },
@@ -15,6 +18,9 @@ export default defineType({
           { title: "Underline", value: "underline" },
         ],
       },
+    }),
+    defineArrayMember({
+      type: "collapsible",
     }),
   ],
 });

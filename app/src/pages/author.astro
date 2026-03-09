@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { urlFor } from "../utils/image";
 import { getBooks, getAuthorPage } from "../utils/sanity";
@@ -17,8 +17,8 @@ const upcomingBooks = books.filter((b) => b.status === "upcoming");
     <Breadcrumb />
     {
       intro?.length ? (
-        <div class="prose-content max-w-2xl">
-          <PortableText value={intro} />
+        <div class="prose-content">
+          <SimpleBlockContent value={intro} />
         </div>
       ) : null
     }

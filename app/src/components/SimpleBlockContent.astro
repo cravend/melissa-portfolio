@@ -1,0 +1,26 @@
+---
+import type {
+  ArbitraryTypedObject,
+  PortableTextBlock,
+} from "@portabletext/types";
+import { PortableText } from "astro-portabletext";
+import PortableTextCollapsible from "./PortableTextCollapsible.astro";
+import PortableTextCenteredBlock from "./PortableTextCenteredBlock.astro";
+
+const components = {
+  type: {
+    collapsible: PortableTextCollapsible,
+  },
+  block: {
+    center: PortableTextCenteredBlock,
+  },
+};
+
+interface Props {
+  value: (PortableTextBlock | ArbitraryTypedObject)[] | null | undefined;
+}
+
+const { value } = Astro.props;
+---
+
+{value?.length ? <PortableText value={value} components={components} /> : null}

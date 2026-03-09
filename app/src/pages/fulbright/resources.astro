@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import ResourceList from "../../components/ResourceList.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../../components/SimpleBlockContent.astro";
 import { getResources, getFulbrightPage } from "../../utils/sanity";
 
 const [resources, fulbrightPage] = await Promise.all([
@@ -19,8 +19,8 @@ const disclaimer = fulbrightPage?.disclaimer;
     <Breadcrumb />
     {
       description?.length ? (
-        <div class="prose-content max-w-2xl">
-          <PortableText value={description} />
+        <div class="prose-content">
+          <SimpleBlockContent value={description} />
         </div>
       ) : null
     }
@@ -31,8 +31,8 @@ const disclaimer = fulbrightPage?.disclaimer;
   />
   {
     disclaimer?.length ? (
-      <div class="prose-content max-w-2xl pt-6 border-t border-orange-200/70 mt-8 dark:border-brand-900/60">
-        <PortableText value={disclaimer} />
+      <div class="prose-content pt-6 border-t border-orange-200/70 mt-8 dark:border-brand-900/60">
+        <SimpleBlockContent value={disclaimer} />
       </div>
     ) : null
   }

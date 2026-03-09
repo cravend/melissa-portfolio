@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { getContactPage } from "../utils/sanity";
 
@@ -32,16 +32,16 @@ function guessIcon(label: string): string | undefined {
     <Breadcrumb />
   </section>
 
-  <section class="max-w-xl space-y-6">
+  <section class="space-y-6">
     {
       intro?.length ? (
         <div class="prose-content text-lg leading-8">
-          <PortableText value={intro} />
+          <SimpleBlockContent value={intro} />
         </div>
       ) : null
     }
     <address class="not-italic">
-      <ul class="space-y-3">
+      <ul class="flex flex-wrap gap-2">
         {
           contactLinks.map((link) => {
             const icon = guessIcon(link.label);

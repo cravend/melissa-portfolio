@@ -1,0 +1,42 @@
+---
+import type { PortableTextBlock } from "@portabletext/types";
+import { PortableText } from "astro-portabletext";
+import PortableTextCenteredBlock from "./PortableTextCenteredBlock.astro";
+
+interface Props {
+  node: { summary?: string; content?: PortableTextBlock[] };
+}
+
+const { node } = Astro.props;
+const summary = node?.summary ?? "";
+const content = node?.content ?? [];
+
+const components = {
+  block: {
+    center: PortableTextCenteredBlock,
+  },
+};
+---
+
+<details
+  class="group my-4 rounded-lg border border-orange-200/60 dark:border-brand-900/40"
+>
+  <summary
+    class="cursor-pointer list-none px-4 py-3 font-medium text-zinc-900 transition-colors hover:bg-orange-50/50 dark:text-zinc-100 dark:hover:bg-brand-900/20 [&::-webkit-details-marker]:hidden"
+  >
+    <span class="flex items-center gap-2">
+      <span class="transition-transform group-open:rotate-90" aria-hidden>
+        ▶
+      </span>
+      {summary}
+    </span>
+  </summary>
+  <div
+    class="prose-content border-t border-orange-200/60 px-4 py-3 dark:border-brand-900/40"
+  >
+    <PortableText
+      value={content as PortableTextBlock[]}
+      components={components}
+    />
+  </div>
+</details>

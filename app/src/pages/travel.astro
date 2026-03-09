@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PostCard from "../components/PostCard.astro";
-import { PortableText } from "astro-portabletext";
+import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { getTravelPage, getPostsByCategory } from "../utils/sanity";
 
@@ -20,8 +20,8 @@ const rest = travelPosts.slice(1);
     <Breadcrumb />
     {
       intro?.length ? (
-        <div class="prose-content max-w-2xl">
-          <PortableText value={intro} />
+        <div class="prose-content">
+          <SimpleBlockContent value={intro} />
         </div>
       ) : null
     }
