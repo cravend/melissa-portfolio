@@ -21,6 +21,12 @@ export async function getPosts(): Promise<Post[]> {
   );
 }
 
+export async function getFeaturedPosts(): Promise<Post[]> {
+  return await sanityClient.fetch(
+    groq`*[_type == "post" && featured == true && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`
+  );
+}
+
 export async function getPostsByCategory(category: PostCategory): Promise<Post[]> {
   return await sanityClient.fetch(
     groq`*[_type == "post" && category == $category && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`,
@@ -141,6 +147,7 @@ export interface Post {
   title?: string;
   slug: Slug;
   category?: PostCategory;
+  featured?: boolean;
   publishedAt?: string;
   excerpt?: string;
   mainImage?: ImageAsset & { alt?: string };

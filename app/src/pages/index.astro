@@ -6,13 +6,13 @@ import { urlFor } from "../utils/image";
 import { getPostPath } from "../utils/routes";
 import {
   getSiteSettings,
-  getPosts,
+  getFeaturedPosts,
   getLatestPostByCategory,
 } from "../utils/sanity";
 
 const [siteSettings, allPosts, latestTour] = await Promise.all([
   getSiteSettings(),
-  getPosts(),
+  getFeaturedPosts(),
   getLatestPostByCategory("kids-corner/tours"),
 ]);
 
