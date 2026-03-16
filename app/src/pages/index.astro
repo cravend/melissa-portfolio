@@ -35,10 +35,10 @@ const meta = PAGE_META["/"];
   title={meta.title}
   description={meta.description}
   jsonLd={PERSON_SCHEMA}
-  lcpImage={featuredPost?.mainImage
-    ? urlFor(featuredPost.mainImage).width(960).height(600).url()
-    : headshot?.asset
-      ? urlFor(headshot).width(560).height(560).fit("crop").url()
+  lcpImage={headshot?.asset
+    ? urlFor(headshot).width(560).height(560).fit("crop").url()
+    : featuredPost?.mainImage
+      ? urlFor(featuredPost.mainImage).width(960).height(600).url()
       : undefined}
 >
   <section class="relative space-y-6 pb-10">
@@ -52,6 +52,7 @@ const meta = PAGE_META["/"];
               width={560}
               height={560}
               alt={headshot.alt}
+              fetchpriority="high"
             />
           </figure>
         ) : null
