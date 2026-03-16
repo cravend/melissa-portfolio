@@ -4,23 +4,25 @@ import Breadcrumb from "../../components/Breadcrumb.astro";
 import ResourceList from "../../components/ResourceList.astro";
 import SimpleBlockContent from "../../components/SimpleBlockContent.astro";
 import { getResources, getFulbrightPage } from "../../utils/sanity";
+import { PAGE_META } from "../../utils/seo";
 
 const [resources, fulbrightPage] = await Promise.all([
   getResources(),
   getFulbrightPage(),
 ]);
-const description = fulbrightPage?.resourcesDescription;
+const pageDescription = fulbrightPage?.resourcesDescription;
 const disclaimer = fulbrightPage?.disclaimer;
+const meta = PAGE_META["/fulbright/resources"];
 ---
 
-<Layout title="Fulbright Resources">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Resources</h1>
     <Breadcrumb />
     {
-      description?.length ? (
+      pageDescription?.length ? (
         <div class="prose-content">
-          <SimpleBlockContent value={description} />
+          <SimpleBlockContent value={pageDescription} />
         </div>
       ) : null
     }

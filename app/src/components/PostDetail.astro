@@ -16,6 +16,10 @@ const { post, parentHref, parentLabel } = Astro.props;
 
 const portableTextComponents = { type: { image: PortableTextImage } };
 const resolvedTitle = post.title ?? "---";
+const mainImageAlt =
+  post.mainImage?.alt && post.mainImage.alt !== "Post image"
+    ? post.mainImage.alt
+    : resolvedTitle;
 ---
 
 <article class="space-y-6">
@@ -40,7 +44,7 @@ const resolvedTitle = post.title ?? "---";
           <img
             class="max-h-[480px] w-auto rounded-lg object-cover"
             src={urlFor(post.mainImage).url()}
-            alt={post.mainImage?.alt ?? "---"}
+            alt={mainImageAlt}
           />
         </figure>
       ) : null

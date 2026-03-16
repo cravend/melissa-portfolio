@@ -9,6 +9,7 @@ import {
   getResources,
   getFulbrightPage,
 } from "../utils/sanity";
+import { PAGE_META } from "../utils/seo";
 
 const [updates, resources, fulbrightPage] = await Promise.all([
   getPostsByCategory("fulbright"),
@@ -21,9 +22,10 @@ const resourcesDescription = fulbrightPage?.resourcesDescription;
 const disclaimer = fulbrightPage?.disclaimer;
 const featured = updates[0];
 const moreUpdates = updates.slice(1);
+const meta = PAGE_META["/fulbright"];
 ---
 
-<Layout title="Fulbright">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Fulbright</h1>
     <Breadcrumb />

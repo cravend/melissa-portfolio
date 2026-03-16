@@ -4,14 +4,16 @@ import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { urlFor } from "../utils/image";
 import { getBooks, getAuthorPage } from "../utils/sanity";
+import { PAGE_META } from "../utils/seo";
 
 const [books, authorPage] = await Promise.all([getBooks(), getAuthorPage()]);
 const intro = authorPage?.intro;
 const publishedBooks = books.filter((b) => b.status === "published");
 const upcomingBooks = books.filter((b) => b.status === "upcoming");
+const meta = PAGE_META["/author"];
 ---
 
-<Layout title="Author">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Author</h1>
     <Breadcrumb />

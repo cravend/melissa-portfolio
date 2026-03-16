@@ -150,6 +150,7 @@ export async function getBooks(): Promise<Book[]> {
 export interface Post {
   _type: "post";
   _createdAt: string;
+  _updatedAt?: string;
   title?: string;
   slug: Slug;
   category?: PostCategory;

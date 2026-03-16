@@ -24,6 +24,5 @@ if (!isPostDetailCategory(post.category)) {
 }
 
 const categoryRoute = POST_DETAIL_CATEGORY_ROUTES[post.category];
----
-
 return Astro.redirect(`${categoryRoute.href}/${slug}`, 301);
+---

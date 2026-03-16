@@ -40,7 +40,11 @@ const isFeatured = variant === "featured";
             .width(isFeatured ? 960 : 640)
             .height(isFeatured ? 600 : 400)
             .url()}
-          alt={post.mainImage?.alt ?? ""}
+          alt={
+            post.mainImage?.alt && post.mainImage.alt !== "Post image"
+              ? post.mainImage.alt
+              : (post.title ?? "")
+          }
         />
       </a>
     ) : null

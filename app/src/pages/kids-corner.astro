@@ -10,6 +10,7 @@ import {
   getKidsCornerPage,
   orderPollsWithFeaturedFirst,
 } from "../utils/sanity";
+import { PAGE_META } from "../utils/seo";
 
 const [rawPolls, latestTour, kidsCornerPage] = await Promise.all([
   getPostsByCategory("kids-corner/polls"),
@@ -18,9 +19,10 @@ const [rawPolls, latestTour, kidsCornerPage] = await Promise.all([
 ]);
 const polls = orderPollsWithFeaturedFirst(rawPolls);
 const intro = kidsCornerPage?.intro;
+const meta = PAGE_META["/kids-corner"];
 ---
 
-<Layout title="Kids' Corner">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Kids' Corner</h1>
     <Breadcrumb />

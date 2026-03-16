@@ -3,10 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { getContactPage } from "../utils/sanity";
+import { PAGE_META } from "../utils/seo";
 
 const contactPage = await getContactPage();
 const intro = contactPage?.intro;
 const contactLinks = contactPage?.contactLinks ?? [];
+const meta = PAGE_META["/contact"];
 
 const iconMap: Record<string, string> = {
   email:
@@ -26,7 +28,7 @@ function guessIcon(label: string): string | undefined {
 }
 ---
 
-<Layout title="Contact">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Contact</h1>
     <Breadcrumb />

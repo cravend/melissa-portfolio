@@ -4,6 +4,7 @@ import Breadcrumb from "../../../components/Breadcrumb.astro";
 import PostCard from "../../../components/PostCard.astro";
 import SimpleBlockContent from "../../../components/SimpleBlockContent.astro";
 import { getPostsByCategory, getKidsCornerPage } from "../../../utils/sanity";
+import { PAGE_META } from "../../../utils/seo";
 
 const [tours, kidsCornerPage] = await Promise.all([
   getPostsByCategory("kids-corner/tours"),
@@ -12,9 +13,10 @@ const [tours, kidsCornerPage] = await Promise.all([
 const toursDescription = kidsCornerPage?.toursDescription;
 const featured = tours[0];
 const rest = tours.slice(1);
+const meta = PAGE_META["/kids-corner/tours"];
 ---
 
-<Layout title="Kids' Corner Tours">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Tours</h1>
     <Breadcrumb />

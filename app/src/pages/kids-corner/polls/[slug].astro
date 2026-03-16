@@ -2,6 +2,12 @@
 import Layout from "../../../layouts/Layout.astro";
 import PostDetail from "../../../components/PostDetail.astro";
 import { getPostByCategory, getPostsByCategory } from "../../../utils/sanity";
+import { urlFor } from "../../../utils/image";
+import {
+  SITE_URL,
+  buildBlogPostingSchema,
+  buildBreadcrumbSchema,
+} from "../../../utils/seo";
 
 export async function getStaticPaths() {
   const posts = await getPostsByCategory("kids-corner/polls");
@@ -17,9 +23,38 @@ const post = await getPostByCategory(slug, "kids-corner/polls");
 if (!post) {
   return Astro.redirect("/kids-corner", 302);
 }
+
+const description = post.excerpt ?? undefined;
+const ogImage = post.mainImage
+  ? urlFor(post.mainImage).width(1200).height(630).fit("crop").url()
+  : undefined;
+
+const blogPostingSchema = buildBlogPostingSchema({
+  title: post.title ?? "---",
+  datePublished: post.publishedAt ?? post._createdAt,
+  description,
+  imageUrl: ogImage,
+});
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: "Home", url: `${SITE_URL}/` },
+  { name: "Kids' Corner", url: `${SITE_URL}/kids-corner` },
+  {
+    name: post.title ?? "---",
+    url: `${SITE_URL}/kids-corner/polls/${slug}`,
+  },
+]);
 ---
 
-<Layout title={post.title ?? "---"}>
+<Layout
+  title={post.title ?? "---"}
+  description={description}
+  ogImage={ogImage}
+  ogType="article"
+  articlePublishedAt={post.publishedAt ?? post._createdAt}
+  articleModifiedAt={post._updatedAt}
+  jsonLd={[blogPostingSchema, breadcrumbSchema]}
+>
   <PostDetail
     post={post}
     parentHref="/kids-corner"

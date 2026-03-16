@@ -4,6 +4,7 @@ import PostCard from "../components/PostCard.astro";
 import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { getTravelPage, getPostsByCategory } from "../utils/sanity";
+import { PAGE_META } from "../utils/seo";
 
 const [travelPosts, travelPage] = await Promise.all([
   getPostsByCategory("travel"),
@@ -12,9 +13,10 @@ const [travelPosts, travelPage] = await Promise.all([
 const intro = travelPage?.intro;
 const featured = travelPosts[0];
 const rest = travelPosts.slice(1);
+const meta = PAGE_META["/travel"];
 ---
 
-<Layout title="Travel">
+<Layout title={meta.title} description={meta.description}>
   <section class="space-y-2">
     <h1>Travel</h1>
     <Breadcrumb />
