@@ -33,18 +33,20 @@ const resolvedTitle = post.title ?? "---";
       </time>
     </p>
   </header>
-  {
-    post.mainImage ? (
-      <figure>
-        <img
-          class="mx-auto max-h-[480px] w-auto"
-          src={urlFor(post.mainImage).url()}
-          alt={post.mainImage?.alt ?? "---"}
-        />
-      </figure>
-    ) : null
-  }
-  <section class="prose-content">
-    <PortableText value={post.body} components={portableTextComponents} />
-  </section>
+  <div class="flex flex-col gap-6 md:flex-row md:items-start">
+    {
+      post.mainImage ? (
+        <figure class="shrink-0 md:w-80">
+          <img
+            class="max-h-[480px] w-auto rounded-lg object-cover"
+            src={urlFor(post.mainImage).url()}
+            alt={post.mainImage?.alt ?? "---"}
+          />
+        </figure>
+      ) : null
+    }
+    <section class="min-w-0 flex-1 prose-content">
+      <PortableText value={post.body} components={portableTextComponents} />
+    </section>
+  </div>
 </article>

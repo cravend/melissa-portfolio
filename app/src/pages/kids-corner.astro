@@ -3,15 +3,20 @@ import Layout from "../layouts/Layout.astro";
 import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import { urlFor } from "../utils/image";
-import { formatDate } from "../utils";
 import { getPostPath } from "../utils/routes";
-import { getLatestPostByCategory, getKidsCornerPage } from "../utils/sanity";
+import {
+  getPostsByCategory,
+  getLatestPostByCategory,
+  getKidsCornerPage,
+  orderPollsWithFeaturedFirst,
+} from "../utils/sanity";
 
-const [latestPoll, latestTour, kidsCornerPage] = await Promise.all([
-  getLatestPostByCategory("kids-corner/polls"),
+const [rawPolls, latestTour, kidsCornerPage] = await Promise.all([
+  getPostsByCategory("kids-corner/polls"),
   getLatestPostByCategory("kids-corner/tours"),
   getKidsCornerPage(),
 ]);
+const polls = orderPollsWithFeaturedFirst(rawPolls);
 const intro = kidsCornerPage?.intro;
 ---
 
@@ -28,60 +33,74 @@ const intro = kidsCornerPage?.intro;
     }
   </section>
 
-  <div class="grid gap-6 sm:grid-cols-2">
-    {
-      latestPoll ? (
-        <a
-          href={getPostPath(latestPoll.slug.current, latestPoll.category)}
-          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
-        >
-          <p
-            class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
-            style="font-family: var(--font-sans);"
+  <div class="flex flex-col gap-6">
+    <div class="space-y-4">
+      <h2
+        class="text-sm font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+        style="font-family: var(--font-sans);"
+      >
+        Polls
+      </h2>
+      {
+        polls.length ? (
+          <div class="flex flex-col gap-4">
+            {polls.map((poll) => {
+              const showImage = !!poll.mainImage;
+              return (
+                <a
+                  href={getPostPath(poll.slug.current, poll.category)}
+                  class="group flex gap-0 rounded-2xl border border-orange-200/60 bg-white no-underline overflow-hidden transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+                >
+                  {showImage && poll.mainImage ? (
+                    <img
+                      class="aspect-square w-40 shrink-0 object-cover md:w-48 rounded-l-2xl"
+                      src={urlFor(poll.mainImage).width(400).height(400).url()}
+                      alt={poll.mainImage.alt ?? poll.title ?? ""}
+                    />
+                  ) : null}
+                  <div class:list={["flex flex-col gap-3 p-6 min-w-0 flex-1"]}>
+                    <h3 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+                      {poll.title ?? "---"}
+                    </h3>
+                    {poll.excerpt ? (
+                      <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                        {poll.excerpt}
+                      </p>
+                    ) : null}
+                    <span
+                      class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+                      style="font-family: var(--font-sans);"
+                    >
+                      Read more &rarr;
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <a
+            href="/kids-corner"
+            class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
           >
-            Latest Poll
-          </p>
-          <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
-            {latestPoll.title ?? "---"}
-          </h2>
-          {latestPoll.excerpt ? (
+            <h3 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+              Question of the Week
+            </h3>
             <p class="text-sm text-zinc-600 dark:text-zinc-400">
-              {latestPoll.excerpt}
+              A new question is coming soon. Check back for this week's prompt.
             </p>
-          ) : null}
-          <span
-            class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
-            style="font-family: var(--font-sans);"
-          >
-            Read more &rarr;
-          </span>
-        </a>
-      ) : (
-        <a
-          href="/kids-corner/polls"
-          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
-        >
-          <p
-            class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
-            style="font-family: var(--font-sans);"
-          >
-            Polls
-          </p>
-          <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
-            Question of the Week
-          </h2>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            A new question is coming soon. Check back for this week's prompt.
-          </p>
-          <span
-            class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
-            style="font-family: var(--font-sans);"
-          >
-            View polls &rarr;
-          </span>
-        </a>
-      )
-    }
+            <span
+              class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+              style="font-family: var(--font-sans);"
+            >
+              View polls &rarr;
+            </span>
+          </a>
+        )
+      }
+    </div>
+
+    <hr class="border-orange-200/60 dark:border-brand-900/40" />
 
     {
       latestTour ? (

@@ -2,7 +2,6 @@
 import Layout from "../../../layouts/Layout.astro";
 import PostDetail from "../../../components/PostDetail.astro";
 import { getPostByCategory, getPostsByCategory } from "../../../utils/sanity";
-import { POST_DETAIL_CATEGORY_ROUTES } from "../../../utils/routes";
 
 export async function getStaticPaths() {
   const posts = await getPostsByCategory("kids-corner/polls");
@@ -16,16 +15,14 @@ const slug = Astro.params.slug as string;
 const post = await getPostByCategory(slug, "kids-corner/polls");
 
 if (!post) {
-  return Astro.redirect("/kids-corner/polls", 302);
+  return Astro.redirect("/kids-corner", 302);
 }
-
-const parentRoute = POST_DETAIL_CATEGORY_ROUTES["kids-corner/polls"];
 ---
 
 <Layout title={post.title ?? "---"}>
   <PostDetail
     post={post}
-    parentHref={parentRoute.href}
-    parentLabel={parentRoute.label}
+    parentHref="/kids-corner"
+    parentLabel="Kids' Corner"
   />
 </Layout>

@@ -36,6 +36,12 @@ export async function getPostsByCategory(category: PostCategory): Promise<Post[]
   );
 }
 
+export function orderPollsWithFeaturedFirst(polls: Post[]): Post[] {
+  const featured = polls.find((p) => p.featured);
+  const rest = polls.filter((p) => p !== featured);
+  return featured ? [featured, ...rest] : polls;
+}
+
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   return await sanityClient.fetch(
     groq`*[_type == "post" && slug.current == $slug][0]`,
