@@ -19,6 +19,9 @@ const alt = node?.alt ?? "";
         src={urlFor(node as Image)
           .width(1200)
           .url()}
+        width={1200}
+        height={800}
+        loading="lazy"
         alt={alt}
       />
     </figure>

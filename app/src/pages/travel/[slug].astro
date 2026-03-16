@@ -53,6 +53,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   title={post.title ?? "---"}
   description={description}
   ogImage={ogImage}
+  lcpImage={post.mainImage
+    ? urlFor(post.mainImage).width(640).height(480).fit("max").url()
+    : undefined}
   ogType="article"
   articlePublishedAt={post.publishedAt ?? post._createdAt}
   articleModifiedAt={post._updatedAt}

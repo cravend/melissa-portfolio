@@ -13,6 +13,26 @@ const { post, variant = "default" } = Astro.props;
 const href = getPostPath(post.slug.current, post.category);
 const date = post.publishedAt || post._createdAt;
 const isFeatured = variant === "featured";
+
+const imgW = isFeatured ? 960 : 640;
+const imgH = isFeatured ? 600 : 400;
+const mainImage = post.mainImage;
+const src = mainImage ? urlFor(mainImage).width(imgW).height(imgH).url() : "";
+const srcSet = mainImage
+  ? isFeatured
+    ? [
+        urlFor(mainImage).width(400).height(250).url() + " 400w",
+        urlFor(mainImage).width(740).height(463).url() + " 740w",
+        urlFor(mainImage).width(960).height(600).url() + " 960w",
+      ].join(", ")
+    : [
+        urlFor(mainImage).width(400).height(250).url() + " 400w",
+        urlFor(mainImage).width(640).height(400).url() + " 640w",
+      ].join(", ")
+  : "";
+const sizes = isFeatured
+  ? "(max-width: 768px) 100vw, 50vw"
+  : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 ---
 
 <article
@@ -22,7 +42,7 @@ const isFeatured = variant === "featured";
   ]}
 >
   {
-    post.mainImage ? (
+    mainImage ? (
       <a
         href={href}
         class="block no-underline"
@@ -36,13 +56,14 @@ const isFeatured = variant === "featured";
               ? "aspect-[16/10] md:aspect-auto md:h-full"
               : "aspect-[16/10]",
           ]}
-          src={urlFor(post.mainImage)
-            .width(isFeatured ? 960 : 640)
-            .height(isFeatured ? 600 : 400)
-            .url()}
+          src={src}
+          srcset={srcSet}
+          sizes={sizes}
+          width={imgW}
+          height={imgH}
           alt={
-            post.mainImage?.alt && post.mainImage.alt !== "Post image"
-              ? post.mainImage.alt
+            mainImage?.alt && mainImage.alt !== "Post image"
+              ? mainImage.alt
               : (post.title ?? "")
           }
         />

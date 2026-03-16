@@ -43,7 +43,10 @@ const mainImageAlt =
         <figure class="shrink-0 md:w-80">
           <img
             class="max-h-[480px] w-auto rounded-lg object-cover"
-            src={urlFor(post.mainImage).url()}
+            src={urlFor(post.mainImage).width(640).height(480).fit("max").url()}
+            width={640}
+            height={480}
+            fetchpriority="high"
             alt={mainImageAlt}
           />
         </figure>

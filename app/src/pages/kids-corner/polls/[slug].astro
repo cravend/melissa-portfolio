@@ -48,6 +48,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
 <Layout
   title={post.title ?? "---"}
+  lcpImage={post.mainImage
+    ? urlFor(post.mainImage).width(640).height(480).fit("max").url()
+    : undefined}
   description={description}
   ogImage={ogImage}
   ogType="article"
