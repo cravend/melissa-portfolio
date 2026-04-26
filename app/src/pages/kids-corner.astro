@@ -6,18 +6,18 @@ import { urlFor } from "../utils/image";
 import { getPostPath } from "../utils/routes";
 import {
   getPostsByCategory,
-  getLatestPostByCategory,
   getKidsCornerPage,
-  orderPollsWithFeaturedFirst,
+  orderPostsWithFeaturedFirst,
 } from "../utils/sanity";
 import { PAGE_META } from "../utils/seo";
 
-const [rawPolls, latestTour, kidsCornerPage] = await Promise.all([
+const [rawPolls, rawTours, kidsCornerPage] = await Promise.all([
   getPostsByCategory("kids-corner/polls"),
-  getLatestPostByCategory("kids-corner/tours"),
+  getPostsByCategory("kids-corner/tours"),
   getKidsCornerPage(),
 ]);
-const polls = orderPollsWithFeaturedFirst(rawPolls);
+const polls = orderPostsWithFeaturedFirst(rawPolls);
+const tours = orderPostsWithFeaturedFirst(rawTours);
 const intro = kidsCornerPage?.intro;
 const meta = PAGE_META["/kids-corner"];
 ---
@@ -104,69 +104,70 @@ const meta = PAGE_META["/kids-corner"];
 
     <hr class="border-orange-200/60 dark:border-brand-900/40" />
 
-    {
-      latestTour ? (
-        <a
-          href={getPostPath(latestTour.slug.current, latestTour.category)}
-          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white no-underline overflow-hidden transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
-        >
-          {latestTour.mainImage ? (
-            <img
-              class="aspect-[16/10] w-full object-cover rounded-none"
-              src={urlFor(latestTour.mainImage).width(640).height(400).url()}
-              alt={latestTour.mainImage?.alt ?? latestTour.title ?? ""}
-            />
-          ) : null}
-          <div class="flex flex-col gap-2 p-6 pt-0">
-            {!latestTour.mainImage ? (
-              <p
-                class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
-                style="font-family: var(--font-sans);"
-              >
-                Latest Tour
-              </p>
-            ) : null}
-            <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
-              {latestTour.title ?? "---"}
-            </h2>
-            {latestTour.excerpt ? (
-              <p class="text-sm text-zinc-600 dark:text-zinc-400">
-                {latestTour.excerpt}
-              </p>
-            ) : null}
+    <div class="space-y-4">
+      <h2
+        class="text-sm font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
+        style="font-family: var(--font-sans);"
+      >
+        Tours
+      </h2>
+      {
+        tours.length ? (
+          <div class="flex flex-col gap-4">
+            {tours.map((tour) => {
+              const showImage = !!tour.mainImage;
+              return (
+                <a
+                  href={getPostPath(tour.slug.current, tour.category)}
+                  class="group flex gap-0 rounded-2xl border border-orange-200/60 bg-white no-underline overflow-hidden transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+                >
+                  {showImage && tour.mainImage ? (
+                    <img
+                      class="aspect-square w-40 shrink-0 object-cover md:w-48 rounded-l-2xl"
+                      src={urlFor(tour.mainImage).width(400).height(400).url()}
+                      alt={tour.mainImage.alt ?? tour.title ?? ""}
+                    />
+                  ) : null}
+                  <div class:list={["flex flex-col gap-3 p-6 min-w-0 flex-1"]}>
+                    <h3 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+                      {tour.title ?? "---"}
+                    </h3>
+                    {tour.excerpt ? (
+                      <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                        {tour.excerpt}
+                      </p>
+                    ) : null}
+                    <span
+                      class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+                      style="font-family: var(--font-sans);"
+                    >
+                      Explore tour &rarr;
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <a
+            href="/kids-corner"
+            class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+          >
+            <h3 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
+              Explore Places & Stories
+            </h3>
+            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+              Tours for young learners are coming soon.
+            </p>
             <span
               class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
               style="font-family: var(--font-sans);"
             >
-              Explore tour &rarr;
+              Check back soon &rarr;
             </span>
-          </div>
-        </a>
-      ) : (
-        <a
-          href="/kids-corner/tours"
-          class="group flex flex-col gap-3 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
-        >
-          <p
-            class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
-            style="font-family: var(--font-sans);"
-          >
-            Tours
-          </p>
-          <h2 class="text-xl font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
-            Explore Places & Stories
-          </h2>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">
-            Tours for young learners are coming soon.
-          </p>
-          <span
-            class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
-            style="font-family: var(--font-sans);"
-          >
-            Browse tours &rarr;
-          </span>
-        </a>
-      )
-    }
+          </a>
+        )
+      }
+    </div>
   </div>
 </Layout>

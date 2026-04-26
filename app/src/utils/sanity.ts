@@ -36,10 +36,10 @@ export async function getPostsByCategory(category: PostCategory): Promise<Post[]
   );
 }
 
-export function orderPollsWithFeaturedFirst(polls: Post[]): Post[] {
-  const featured = polls.find((p) => p.featured);
-  const rest = polls.filter((p) => p !== featured);
-  return featured ? [featured, ...rest] : polls;
+export function orderPostsWithFeaturedFirst(posts: Post[]): Post[] {
+  const featured = posts.filter((p) => p.featured);
+  const rest = posts.filter((p) => !p.featured);
+  return [...featured, ...rest];
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -80,15 +80,6 @@ export async function getKidsCornerPosts(): Promise<Post[]> {
   return await sanityClient.fetch(
     groq`*[_type == "post" && category in $categories && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)`,
     { categories: KIDS_CORNER_CATEGORIES }
-  );
-}
-
-export async function getLatestPostByCategory(
-  category: PostCategory
-): Promise<Post | null> {
-  return await sanityClient.fetch(
-    groq`*[_type == "post" && category == $category && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc)[0]`,
-    { category }
   );
 }
 

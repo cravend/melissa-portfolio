@@ -3,18 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import PostCard from "../components/PostCard.astro";
 import SimpleBlockContent from "../components/SimpleBlockContent.astro";
 import { urlFor } from "../utils/image";
-import { getPostPath } from "../utils/routes";
-import {
-  getSiteSettings,
-  getFeaturedPosts,
-  getLatestPostByCategory,
-} from "../utils/sanity";
+import { getSiteSettings, getFeaturedPosts } from "../utils/sanity";
 import { PAGE_META, PERSON_SCHEMA } from "../utils/seo";
 
-const [siteSettings, allPosts, latestTour] = await Promise.all([
+const [siteSettings, allPosts] = await Promise.all([
   getSiteSettings(),
   getFeaturedPosts(),
-  getLatestPostByCategory("kids-corner/tours"),
 ]);
 
 const homeCopy = siteSettings?.home;
@@ -142,55 +136,27 @@ const meta = PAGE_META["/"];
         >
       </a>
 
-      {
-        latestTour ? (
-          <a
-            href={getPostPath(latestTour.slug.current, latestTour.category)}
-            class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
-          >
-            <p
-              class="text-xs font-semibold uppercase tracking-widest text-brand-600 dark:text-brand-400"
-              style="font-family: var(--font-sans);"
-            >
-              Latest Tour
-            </p>
-            <h3 class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
-              {latestTour.title ?? "---"}
-            </h3>
-            {latestTour.excerpt ? (
-              <p class="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                {latestTour.excerpt}
-              </p>
-            ) : null}
-            <span
-              class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
-              style="font-family: var(--font-sans);"
-            >
-              Read more &rarr;
-            </span>
-          </a>
-        ) : (
-          <a
-            href="/author"
-            class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
-          >
-            <h3 class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300">
-              Author
-            </h3>
-            {homeCopy?.authorDescription?.length ? (
-              <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
-                <SimpleBlockContent value={homeCopy.authorDescription} />
-              </div>
-            ) : null}
-            <span
-              class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
-              style="font-family: var(--font-sans);"
-            >
-              Books & News &rarr;
-            </span>
-          </a>
-        )
-      }
+      <a
+        href="/author"
+        class="group relative flex flex-col gap-2 rounded-2xl border border-orange-200/60 bg-white p-6 no-underline transition-shadow hover:shadow-lg dark:border-brand-900/40 dark:bg-zinc-900"
+      >
+        <h3
+          class="text-lg font-semibold text-zinc-950 transition-colors group-hover:text-brand-700 dark:text-zinc-50 dark:group-hover:text-brand-300"
+        >
+          Author
+        </h3>
+        {
+          homeCopy?.authorDescription?.length ? (
+            <div class="text-sm leading-6 text-zinc-600 dark:text-zinc-400 prose-content">
+              <SimpleBlockContent value={homeCopy.authorDescription} />
+            </div>
+          ) : null
+        }
+        <span
+          class="mt-auto pt-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+          style="font-family: var(--font-sans);">Books & News &rarr;</span
+        >
+      </a>
     </div>
   </section>
 </Layout>
