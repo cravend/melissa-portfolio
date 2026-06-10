@@ -135,4 +135,12 @@
   .prose-content ol {
     @apply list-decimal pl-6;
   }
+
+  .drive-embed {
+    @apply relative aspect-video w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-900;
+  }
+
+  .drive-embed iframe {
+    @apply absolute inset-0 h-full w-full border-0;
+  }
 }

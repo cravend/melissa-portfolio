@@ -3,6 +3,7 @@ import Layout from "../../../layouts/Layout.astro";
 import PostDetail from "../../../components/PostDetail.astro";
 import { getPostByCategory, getPostsByCategory } from "../../../utils/sanity";
 import { POST_DETAIL_CATEGORY_ROUTES } from "../../../utils/routes";
+import { hasGoogleDriveEmbed } from "../../../utils/googleDrive";
 import { urlFor } from "../../../utils/image";
 import {
   SITE_URL,
@@ -28,6 +29,7 @@ if (!post) {
 const parentRoute = POST_DETAIL_CATEGORY_ROUTES["kids-corner/tours"];
 
 const description = post.excerpt ?? undefined;
+const showMainImage = post.mainImage && !hasGoogleDriveEmbed(post.body);
 const ogImage = post.mainImage
   ? urlFor(post.mainImage).width(1200).height(630).fit("crop").url()
   : undefined;
@@ -53,8 +55,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   title={post.title ?? "---"}
   description={description}
   ogImage={ogImage}
-  lcpImage={post.mainImage
-    ? urlFor(post.mainImage).width(640).height(480).fit("max").url()
+  lcpImage={showMainImage
+    ? urlFor(post.mainImage!).width(640).height(480).fit("max").url()
     : undefined}
   ogType="article"
   articlePublishedAt={post.publishedAt ?? post._createdAt}

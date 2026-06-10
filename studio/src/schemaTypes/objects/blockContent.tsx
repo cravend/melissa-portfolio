@@ -71,5 +71,8 @@ export default defineType({
         },
       ],
     }),
+    defineArrayMember({
+      type: 'googleDriveEmbed',
+    }),
   ],
 })

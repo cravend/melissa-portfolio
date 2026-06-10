@@ -1,5 +1,6 @@
 import blockContent from './objects/blockContent'
 import collapsible from './objects/collapsible'
+import googleDriveEmbed from './objects/googleDriveEmbed'
 import simpleBlockContent from './objects/simpleBlockContent'
 import book from './documents/lists/book'
 import post from './documents/lists/post'
@@ -20,4 +21,5 @@ export const schemaTypes = [
     blockContent,
     simpleBlockContent,
     collapsible,
+    googleDriveEmbed,
 ]
