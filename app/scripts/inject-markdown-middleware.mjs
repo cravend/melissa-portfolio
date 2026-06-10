@@ -2,44 +2,50 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const outputDir = ".vercel/output";
-const funcDir = join(outputDir, "functions/middleware.func");
+const funcDir = join(outputDir, "functions/_middleware.func");
 
 mkdirSync(funcDir, { recursive: true });
 
-const middlewareSource = `export default async function middleware(request) {
+const middlewareSource = `function passThrough() {
+  const response = new Response();
+  response.headers.set("x-middleware-next", "1");
+  return response;
+}
+
+export default function middleware(request) {
   const accept = request.headers.get("accept") || "";
-  if (!/text\\/markdown/i.test(accept)) return;
+  if (!/text\\/markdown/i.test(accept)) return passThrough();
 
   const url = new URL(request.url);
-  if (url.pathname.endsWith(".md")) return;
+  if (
+    url.pathname.startsWith("/_astro/") ||
+    url.pathname.endsWith(".md") ||
+    /\\.(css|js|png|jpe?g|gif|svg|ico|webp|woff2?|ttf|eot|xml|txt|json)$/i.test(
+      url.pathname
+    )
+  ) {
+    return passThrough();
+  }
 
   const mdPath =
     url.pathname === "/"
       ? "/index.md"
       : url.pathname.replace(/\\/$/, "") + ".md";
-  url.pathname = mdPath;
 
-  const mdResponse = await fetch(url, { headers: { accept: "*/*" } });
-  if (!mdResponse.ok) return;
-
-  const body = await mdResponse.text();
-  return new Response(body, {
-    status: 200,
-    headers: {
-      "content-type": "text/markdown; charset=utf-8",
-      vary: "Accept",
-    },
-  });
+  const response = new Response();
+  response.headers.set("x-middleware-rewrite", mdPath);
+  response.headers.set("vary", "Accept");
+  return response;
 }
 `;
 
-writeFileSync(join(funcDir, "middleware.js"), middlewareSource);
+writeFileSync(join(funcDir, "index.js"), middlewareSource);
 writeFileSync(
   join(funcDir, ".vc-config.json"),
   JSON.stringify(
     {
       runtime: "edge",
-      entrypoint: "middleware.js",
+      entrypoint: "index.js",
     },
     null,
     2
@@ -49,11 +55,20 @@ writeFileSync(
 const configPath = join(outputDir, "config.json");
 const config = JSON.parse(readFileSync(configPath, "utf8"));
 
-if (!config.routes.some((route) => route.handle === "middleware")) {
+const middlewareRoute = {
+  src: "/(.*)",
+  middlewarePath: "_middleware",
+  continue: true,
+};
+
+const alreadyInjected = config.routes.some(
+  (route) => route.middlewarePath === "_middleware"
+);
+
+if (!alreadyInjected) {
   const filesystemIndex = config.routes.findIndex(
     (route) => route.handle === "filesystem"
   );
-  const middlewareRoute = { handle: "middleware" };
 
   if (filesystemIndex >= 0) {
     config.routes.splice(filesystemIndex, 0, middlewareRoute);

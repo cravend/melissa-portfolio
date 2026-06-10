@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && tsc --noEmit && astro build && node scripts/inject-markdown-middleware.mjs",
+    "build": "astro check && tsc --noEmit && astro build",
+    "postbuild": "node scripts/inject-markdown-middleware.mjs",
+    "vercel-build": "bun run build",
     "preview": "astro preview",
     "astro": "astro"
   },
