@@ -9,8 +9,8 @@ export interface MarkdownPageMeta {
 }
 
 export function markdownPath(path: string): string {
-  if (path === "/") return "/index.md";
-  return `${path}.md`;
+  if (path === "/" || path === "") return "/index.md";
+  return `${path.replace(/\/$/, "")}.md`;
 }
 
 export function markdownUrl(path: string): string {
