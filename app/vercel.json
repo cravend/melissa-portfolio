@@ -1,0 +1,48 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)\\.md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Vary", "value": "Accept" }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/sitemap.md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Vary", "value": "Accept" }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(.*)text/markdown(.*)"
+        }
+      ],
+      "destination": "/index.md"
+    },
+    {
+      "source": "/((?!.*\\.md$|llms\\.txt$|sitemap\\.md$|_astro/|favicon\\.svg$|robots\\.txt$|sitemap).*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(.*)text/markdown(.*)"
+        }
+      ],
+      "destination": "/$1.md"
+    }
+  ]
+}
