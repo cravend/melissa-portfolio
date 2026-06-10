@@ -20,29 +20,5 @@
         { "key": "Vary", "value": "Accept" }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": "(.*)text/markdown(.*)"
-        }
-      ],
-      "destination": "/index.md"
-    },
-    {
-      "source": "/((?!.*\\.md$|llms\\.txt$|sitemap\\.md$|_astro/|favicon\\.svg$|robots\\.txt$|sitemap).*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": "(.*)text/markdown(.*)"
-        }
-      ],
-      "destination": "/$1.md"
-    }
   ]
 }
